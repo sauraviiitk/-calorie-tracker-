@@ -7,7 +7,7 @@ import NutritionSummaryMetrics from '../components/reports/NutritionSummaryMetri
 import WeeklyCalorieChart from '../components/reports/WeeklyCalorieChart';
 import MacroTrendsChart from '../components/reports/MacroTrendsChart';
 import MacroCompositionDonut from '../components/reports/MacroCompositionDonut';
-import GoalVsActualBars from '../components/reports/GoalVsActualBars';
+import DailyNutritionPerformance from '../components/reports/DailyNutritionPerformance';
 import MicronutrientSummary from '../components/reports/MicronutrientSummary';
 
 const ReportsPage = () => {
@@ -230,8 +230,8 @@ const ReportsPage = () => {
       {/* 1. HEADER + DATE RANGE */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="font-headline-md text-headline-md font-bold text-on-surface mb-1">Nutrition Reports</h1>
-          <p className="text-on-surface-variant font-body-md text-body-md">Understand your nutrition trends and progress toward your goals.</p>
+          <h1 className="font-headline-md text-headline-md font-bold text-on-surface mb-1 tracking-tight">Nutrition Report</h1>
+          <p className="text-on-surface-variant text-[14px]">See how your intake compares with your daily targets.</p>
         </div>
         
         <div className="flex items-center gap-3">
@@ -314,9 +314,9 @@ const ReportsPage = () => {
             <MacroCompositionDonut {...todayMacros} />
           </div>
 
-          {/* 5. FULL WIDTH/TWO COLUMNS: GOAL VS ACTUAL */}
+          {/* 5. FULL WIDTH/TWO COLUMNS: DAILY NUTRITION */}
           <div className="grid grid-cols-1 gap-6 w-full">
-            <GoalVsActualBars goals={goals} averages={summaryData} />
+            <DailyNutritionPerformance goals={goals} averages={summaryData} />
           </div>
 
           {/* 6. FULL WIDTH: MICRONUTRIENT SUMMARY */}
