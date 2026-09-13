@@ -8,8 +8,7 @@
     "dev": "node server.js",
     "worker": "node src/workers/foodAnalysis.worker.js",
     "worker:pdf": "node src/workers/pdfImport.worker.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "prisma skills sync || exit 0"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -30,10 +29,7 @@
     "multer": "^2.3.0",
     "multer-storage-cloudinary": "^4.0.0",
     "pdf-parse": "^2.4.5",
+    "prisma": "^5.22.0",
     "zod": "^4.6.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14",
-    "prisma": "^5.22.0"
   }
 }
