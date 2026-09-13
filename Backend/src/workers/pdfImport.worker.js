@@ -15,6 +15,7 @@ const { GoogleGenAI } = require('@google/genai');
 const mealService = require('../services/mealService');
 const fs = require('fs');
 const { formatAiError } = require('../utils/aiErrorHandler');
+const { isToday } = require('../utils/dateUtils');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -117,6 +118,11 @@ async function processJob(job) {
       let mealDate = new Date(entry.date || today);
       if (isNaN(mealDate.getTime())) mealDate = new Date();
       mealDate.setHours(12, 0, 0, 0);
+      
+      if (!isToday(mealDate)) {
+        skipped++;
+        continue;
+      }
 
       const mealData = {
         name:     String(entry.name).slice(0, 200),
@@ -139,7 +145,7 @@ async function processJob(job) {
   const result = {
     imported,
     skipped,
-    message: `Successfully imported ${imported} meal${imported !== 1 ? 's' : ''}${skipped > 0 ? `, skipped ${skipped}` : ''}.`,
+    message: `Successfully imported ${imported} meal${imported !== 1 ? 's' : ''}${skipped > 0 ? `, skipped ${skipped} (invalid or non-today dates)` : ''}.`,
     entries: importedEntries,
   };
 

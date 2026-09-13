@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '../ui/Button';
 import ErrorAlert from '../ui/ErrorAlert';
 import { normalizeApiError } from '../../utils/errorHandler';
+import { isEditableDate, getLocalDateString } from '../../utils/dateUtils';
 import api from '../../services/api';
 
 const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
@@ -42,6 +43,11 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
     if (!isValid(carbs)) { setErrorObj({ title: 'Validation Error', message: 'Carbs are required', retryable: true }); return; }
     if (!isValid(fat)) { setErrorObj({ title: 'Validation Error', message: 'Fat is required', retryable: true }); return; }
     
+    if (meal.date && !isEditableDate(getLocalDateString(new Date(meal.date)))) {
+      setErrorObj({ title: 'Read-Only Date', message: 'You can only edit meals for today.', retryable: false });
+      return;
+    }
+    
     try {
       setLoading(true);
       setErrorObj(null);
@@ -65,6 +71,11 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
   };
 
   const handleDelete = async () => {
+    if (meal.date && !isEditableDate(getLocalDateString(new Date(meal.date)))) {
+      setErrorObj({ title: 'Read-Only Date', message: 'You can only delete meals for today.', retryable: false });
+      setConfirmDelete(false);
+      return;
+    }
     if (!confirmDelete) { setConfirmDelete(true); return; }
     try {
       setDeleting(true);

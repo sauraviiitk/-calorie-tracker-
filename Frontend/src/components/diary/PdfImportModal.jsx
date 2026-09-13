@@ -260,6 +260,9 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
                   <li>• Any tabular PDF with food names + macros</li>
                   <li>• Custom food diary PDFs (text-based only)</li>
                 </ul>
+                <div className="mt-2 text-xs font-medium text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200/50">
+                  <span className="font-semibold text-amber-800">Note:</span> Only meals for today will be imported. Entries for past or future dates will be skipped.
+                </div>
               </div>
 
               {/* Actions */}

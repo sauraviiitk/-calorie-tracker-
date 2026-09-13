@@ -9,6 +9,7 @@ import MealLoggerModal from '../components/diary/MealLoggerModal';
 import api from '../services/api';
 import ErrorState from '../components/ui/ErrorState';
 import { normalizeApiError } from '../utils/errorHandler';
+import { getLocalDateString, isEditableDate } from '../utils/dateUtils';
 
 const DashboardPage = () => {
   const [goals, setGoals] = useState(null);
@@ -17,12 +18,6 @@ const DashboardPage = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const getLocalDateString = (d) => {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
 
   const [date, setDate] = useState(getLocalDateString(new Date()));
   const [mealType, setMealType] = useState('All');
@@ -81,9 +76,11 @@ const DashboardPage = () => {
     );
   }
 
+  const isEditable = isEditableDate(date);
+
   return (
     <div className="flex flex-col gap-8 w-full relative">
-      <WelcomeBanner onAddMeal={() => setIsModalOpen(true)} />
+      <WelcomeBanner onAddMeal={() => isEditable && setIsModalOpen(true)} isEditable={isEditable} />
       
       {/* Filters Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/40 shadow-sm">
@@ -94,7 +91,8 @@ const DashboardPage = () => {
         <div className="flex items-center gap-3">
           <input 
             type="date" 
-            value={date} 
+            value={date}
+            max={getLocalDateString(new Date())}
             onChange={e => setDate(e.target.value)}
             className="h-[40px] px-3 bg-surface-container border border-outline-variant/40 rounded-xl text-[13px] text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer"
           />
@@ -115,6 +113,13 @@ const DashboardPage = () => {
         </div>
       </div>
       
+      {!isEditable && (
+        <div className="bg-[#fff8e1] border border-[#f59e0b]/30 rounded-xl p-4 flex items-center gap-3 text-[#b45309]">
+          <span className="material-symbols-outlined text-[20px]">info</span>
+          <p className="text-[14px] font-medium">You're viewing a previous day. Meal changes are only available for today.</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <CalorieOverviewCard consumed={totalCalories} target={goals?.targetCalories || 2000} />
         <MacronutrientsCard 
@@ -129,7 +134,8 @@ const DashboardPage = () => {
           <MealsList
             meals={meals}
             loading={loading}
-            onAddMeal={() => setIsModalOpen(true)}
+            isEditable={isEditable}
+            onAddMeal={() => isEditable && setIsModalOpen(true)}
             onMealUpdated={handleMealUpdated}
             onMealDeleted={handleMealDeleted}
           />

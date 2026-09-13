@@ -5,7 +5,7 @@ import EditMealModal from '../diary/EditMealModal';
 import api from '../../services/api';
 
 /* ─── Single Meal Row ───────────────────────────────────────────── */
-const MealItem = ({ meal, onEdit, onDelete }) => {
+const MealItem = ({ meal, onEdit, onDelete, isEditable = true }) => {
   const { name, date, calories, protein, carbs, fat } = meal;
   const timeStr = date
     ? new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -71,8 +71,8 @@ const MealItem = ({ meal, onEdit, onDelete }) => {
         className={`flex items-center gap-1 flex-shrink-0 ml-3 transition-opacity duration-200
           ${confirmDelete ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
       >
-        {/* Edit button – hidden while confirming delete */}
-        {!confirmDelete && (
+        {/* Edit button – hidden while confirming delete or if not editable */}
+        {!confirmDelete && isEditable && (
           <button
             onClick={() => onEdit(meal)}
             title="Edit meal"
@@ -83,7 +83,8 @@ const MealItem = ({ meal, onEdit, onDelete }) => {
         )}
 
         {/* Delete / Confirm delete */}
-        <button
+        {isEditable && (
+          <button
           onClick={handleDeleteClick}
           disabled={deleting}
           title={confirmDelete ? 'Click again to confirm deletion' : 'Delete meal'}
@@ -103,6 +104,7 @@ const MealItem = ({ meal, onEdit, onDelete }) => {
             </span>
           )}
         </button>
+        )}
 
         {/* Cancel confirmation */}
         {confirmDelete && !deleting && (
@@ -120,7 +122,7 @@ const MealItem = ({ meal, onEdit, onDelete }) => {
 };
 
 /* ─── Meals List Card ───────────────────────────────────────────── */
-const MealsList = ({ meals = [], loading, onAddMeal, onMealUpdated, onMealDeleted }) => {
+const MealsList = ({ meals = [], loading, onAddMeal, onMealUpdated, onMealDeleted, isEditable = true }) => {
   const [editingMeal, setEditingMeal] = useState(null);
 
   if (loading) {
@@ -145,9 +147,11 @@ const MealsList = ({ meals = [], loading, onAddMeal, onMealUpdated, onMealDelete
               {meals.length} items
             </span>
           </div>
-          <Button variant="secondary" icon="add_circle" onClick={onAddMeal}>
-            Add Meal
-          </Button>
+          {isEditable && (
+            <Button variant="secondary" icon="add_circle" onClick={onAddMeal}>
+              Add Meal
+            </Button>
+          )}
         </div>
 
         {/* Meal rows */}
@@ -163,13 +167,14 @@ const MealsList = ({ meals = [], loading, onAddMeal, onMealUpdated, onMealDelete
                   <p className="font-body-md text-body-md text-outline italic mt-0.5">Start tracking your food!</p>
                 </div>
               </div>
-              <Button variant="outline" icon="add" onClick={onAddMeal}>Add Food</Button>
+              {isEditable && <Button variant="outline" icon="add" onClick={onAddMeal}>Add Food</Button>}
             </div>
           ) : (
             meals.map((meal) => (
               <MealItem
                 key={meal.id}
                 meal={meal}
+                isEditable={isEditable}
                 onEdit={setEditingMeal}
                 onDelete={(id) => onMealDeleted(id)}
               />

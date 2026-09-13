@@ -3,7 +3,7 @@ import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import { useAuth } from '../../context/AuthContext';
 
-const WelcomeBanner = ({ onAddMeal }) => {
+const WelcomeBanner = ({ onAddMeal, isEditable = true }) => {
   const { user } = useAuth();
   const userName = user?.name ? user.name.split(' ')[0] : 'User';
   
@@ -42,9 +42,11 @@ const WelcomeBanner = ({ onAddMeal }) => {
             className="h-11 pl-10 pr-4 rounded-xl bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none shadow-sm transition-all w-48 sm:w-64"
           />
         </div>
-        <Button variant="primary" size="lg" icon="add" onClick={onAddMeal}>
-          Add Meal
-        </Button>
+        {isEditable && (
+          <Button variant="primary" size="lg" icon="add" onClick={onAddMeal}>
+            Add Meal
+          </Button>
+        )}
       </div>
     </div>
   );

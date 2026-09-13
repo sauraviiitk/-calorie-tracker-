@@ -5,6 +5,7 @@ import EditMealModal from '../components/diary/EditMealModal';
 import PdfImportModal from '../components/diary/PdfImportModal';
 import ErrorState from '../components/ui/ErrorState';
 import { normalizeApiError } from '../utils/errorHandler';
+import { isEditableDate } from '../utils/dateUtils';
 
 const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
 
@@ -29,7 +30,12 @@ const DateNavigator = ({ date, onPrev, onNext, onToday }) => {
         </span>
         {isToday && <span className="font-label-sm text-[12px] text-primary font-semibold mt-0.5">Today</span>}
       </div>
-      <button onClick={onNext} className="w-9 h-9 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors" title="Next day">
+      <button 
+        onClick={onNext} 
+        disabled={isToday || date > new Date()}
+        className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${isToday || date > new Date() ? 'text-outline-variant cursor-not-allowed opacity-50' : 'hover:bg-surface-container-high text-on-surface-variant'}`} 
+        title="Next day"
+      >
         <span className="material-symbols-outlined text-[20px]">chevron_right</span>
       </button>
       {!isToday && (
@@ -96,7 +102,7 @@ const NutritionSummary = ({ meals, goals }) => {
 };
 
 /* ─── Meal Section (per type) ────────────────────────────── */
-const MealSection = ({ type, meals, onAddFood, onEditMeal }) => {
+const MealSection = ({ type, meals, onAddFood, onEditMeal, isEditable = true }) => {
   const cfg = MEAL_ICONS[type] || { icon: 'restaurant', color: 'bg-surface-container text-on-surface-variant' };
   const sectionCal = meals.reduce((s, m) => s + (m.calories || 0), 0);
 
@@ -118,13 +124,15 @@ const MealSection = ({ type, meals, onAddFood, onEditMeal }) => {
         {meals.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 px-6 text-center">
             <p className="text-[14px] text-on-surface-variant mb-4">No food logged yet.</p>
-            <button
-              onClick={() => onAddFood(type)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-container/60 text-primary hover:bg-primary/20 transition-colors text-[13px] font-semibold"
-            >
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              Add Food
-            </button>
+            {isEditable && (
+              <button
+                onClick={() => onAddFood(type)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-container/60 text-primary hover:bg-primary/20 transition-colors text-[13px] font-semibold"
+              >
+                <span className="material-symbols-outlined text-[18px]">add</span>
+                Add Food
+              </button>
+            )}
           </div>
         ) : (
           <>
@@ -142,27 +150,31 @@ const MealSection = ({ type, meals, onAddFood, onEditMeal }) => {
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0">
                     <span className="font-title-sm text-on-surface font-medium text-[14px] text-right min-w-[60px]">{Math.round(meal.calories)} kcal</span>
-                    <button
-                      onClick={() => onEditMeal(meal)}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-primary"
-                      title="Edit meal"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">edit</span>
-                    </button>
+                    {isEditable && (
+                      <button
+                        onClick={() => onEditMeal(meal)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-primary"
+                        title="Edit meal"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">edit</span>
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
             {/* Add Food button for populated lists */}
-            <div className="px-6 py-4 border-t border-outline-variant/20 bg-surface-container-lowest/30">
-              <button
-                onClick={() => onAddFood(type)}
-                className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-[14px] font-medium"
-              >
-                <span className="material-symbols-outlined text-[18px]">add_circle</span>
-                Add Food
-              </button>
-            </div>
+            {isEditable && (
+              <div className="px-6 py-4 border-t border-outline-variant/20 bg-surface-container-lowest/30">
+                <button
+                  onClick={() => onAddFood(type)}
+                  className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-[14px] font-medium"
+                >
+                  <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                  Add Food
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>
@@ -246,6 +258,8 @@ const FoodDiaryPage = () => {
     return acc;
   }, {});
 
+  const isEditable = isEditableDate(date);
+
   return (
     <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-8 lg:px-12 pb-12 flex flex-col gap-8">
       {/* Page title + Date nav + Import button */}
@@ -280,6 +294,12 @@ const FoodDiaryPage = () => {
         </div>
       ) : (
         <>
+          {!isEditable && (
+            <div className="bg-[#fff8e1] border border-[#f59e0b]/30 rounded-xl p-4 flex items-center gap-3 text-[#b45309]">
+              <span className="material-symbols-outlined text-[20px]">info</span>
+              <p className="text-[14px] font-medium">You're viewing a previous day. Meal changes are only available for today.</p>
+            </div>
+          )}
           {/* Nutrition Summary */}
           {loading ? (
         <div className="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/60 animate-pulse h-[200px]" />
@@ -299,6 +319,7 @@ const FoodDiaryPage = () => {
               key={type}
               type={type}
               meals={grouped[type]}
+              isEditable={isEditable}
               onAddFood={openAddModal}
               onEditMeal={setEditingMeal}
             />

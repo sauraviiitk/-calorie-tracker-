@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import Button from '../ui/Button';
 import ErrorAlert from '../ui/ErrorAlert';
 import { normalizeApiError } from '../../utils/errorHandler';
+import { isEditableDate, getLocalDateString } from '../../utils/dateUtils';
 import api from '../../services/api';
 
 const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
@@ -97,6 +98,12 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
     if (!isValid(carbs))    { setErrorObj({ title: 'Validation Error', message: 'Carbs (g) is required', retryable: true }); return; }
     if (!isValid(fat))      { setErrorObj({ title: 'Validation Error', message: 'Fat (g) is required', retryable: true }); return; }
 
+    const dateToSave = selectedDate || new Date();
+    if (!isEditableDate(getLocalDateString(dateToSave))) {
+      setErrorObj({ title: 'Read-Only Date', message: 'You can only add meals for today.', retryable: false });
+      return;
+    }
+
     try {
       setLoading(true);
       setErrorObj(null);
@@ -110,7 +117,7 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
       formData.append('protein', Number(protein));
       formData.append('carbs', Number(carbs));
       formData.append('fat', Number(fat));
-      formData.append('date', selectedDate ? selectedDate.toISOString() : new Date().toISOString());
+      formData.append('date', dateToSave.toISOString());
       
       if (image && !scannedImageUrl) {
         formData.append('image', image);
