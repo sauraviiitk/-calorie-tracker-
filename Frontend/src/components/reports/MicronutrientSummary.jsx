@@ -21,18 +21,16 @@ const MicroRow = ({ data }) => {
   const percentage = data.target > 0 ? Math.min(Math.round((data.actual / data.target) * 100), 100) : 0;
   
   return (
-    <div className="flex flex-col gap-1.5 py-3 border-b border-outline-variant/30 last:border-0 group">
-      <div className="flex justify-between items-baseline text-[13px]">
-        <span className="font-medium text-on-surface flex-1">{data.name}</span>
-        <div className="flex items-baseline justify-end gap-4">
-          <div className="text-right whitespace-nowrap min-w-[100px]">
-            <span className="font-semibold text-on-surface">{formatNutrition(data.actual, data.unit)}</span>
-            <span className="text-on-surface-variant font-medium"> / {formatNutrition(data.target, data.unit)} <span className="text-[11px]">{data.unit}</span></span>
-          </div>
-          <span className="text-[13px] font-bold text-primary w-9 text-right">{percentage}%</span>
+    <div className="py-3 group">
+      <div className="grid grid-cols-[1fr_auto_40px] gap-4 items-baseline text-[13px] mb-2">
+        <span className="font-medium text-on-surface">{data.name}</span>
+        <div className="text-right whitespace-nowrap">
+          <span className="font-semibold text-on-surface">{formatNutrition(data.actual, data.unit)}</span>
+          <span className="text-on-surface-variant font-medium text-[12px]"> / {formatNutrition(data.target, data.unit)} {data.unit}</span>
         </div>
+        <span className="font-bold text-primary text-right">{percentage}%</span>
       </div>
-      <div className="h-1 w-full bg-surface-container-high rounded-full overflow-hidden flex opacity-60 group-hover:opacity-100 transition-opacity mt-0.5">
+      <div className="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden opacity-80 group-hover:opacity-100 transition-opacity">
         <div 
           className="h-full rounded-full bg-primary transition-all duration-1000"
           style={{ width: `${percentage}%` }}
@@ -49,7 +47,7 @@ const MicronutrientSummary = () => {
         <div>
           <h3 className="font-headline-sm text-headline-sm font-bold text-on-surface flex items-center gap-3">
             Micronutrient Summary
-            <span className="text-[10px] px-2 py-0.5 bg-surface-container-highest text-on-surface-variant rounded-md font-semibold tracking-wide border border-outline-variant/40">ESTIMATED</span>
+            <span className="text-[11px] px-2 py-0.5 bg-surface-container text-on-surface-variant rounded font-medium border border-outline-variant/50 tracking-wide uppercase">Estimated</span>
           </h3>
           <p className="text-[14px] text-on-surface-variant mt-1">Values are estimated from your logged meals.</p>
         </div>
@@ -57,12 +55,10 @@ const MicronutrientSummary = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
         <div>
-          <div className="flex justify-between text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 pb-2 border-b border-outline-variant">
+          <div className="grid grid-cols-[1fr_auto_40px] gap-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 pb-2 border-b border-outline-variant">
             <span>Vitamins</span>
-            <div className="flex gap-4 pr-1">
-              <span className="min-w-[100px] text-right">Actual / Target</span>
-              <span className="w-9 text-right">%</span>
-            </div>
+            <span className="text-right">Actual / Target</span>
+            <span className="text-right">%</span>
           </div>
           <div className="flex flex-col">
             {MOCK_MICROS.vitamins.map(v => <MicroRow key={v.name} data={v} />)}
@@ -70,12 +66,10 @@ const MicronutrientSummary = () => {
         </div>
         
         <div>
-          <div className="flex justify-between text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 pb-2 border-b border-outline-variant">
+          <div className="grid grid-cols-[1fr_auto_40px] gap-4 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2 pb-2 border-b border-outline-variant">
             <span>Minerals</span>
-            <div className="flex gap-4 pr-1">
-              <span className="min-w-[100px] text-right">Actual / Target</span>
-              <span className="w-9 text-right">%</span>
-            </div>
+            <span className="text-right">Actual / Target</span>
+            <span className="text-right">%</span>
           </div>
           <div className="flex flex-col">
             {MOCK_MICROS.minerals.map(m => <MicroRow key={m.name} data={m} />)}
