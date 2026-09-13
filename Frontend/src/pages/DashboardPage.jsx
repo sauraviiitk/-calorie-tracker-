@@ -1,0 +1,143 @@
+import React, { useState, useEffect } from 'react';
+import WelcomeBanner from '../components/dashboard/WelcomeBanner';
+import CalorieOverviewCard from '../components/dashboard/CalorieOverviewCard';
+import MacronutrientsCard from '../components/dashboard/MacronutrientsCard';
+import MealsList from '../components/dashboard/MealsList';
+import WeightGoalCard from '../components/dashboard/WeightGoalCard';
+import WeeklyChart from '../components/dashboard/WeeklyChart';
+import MealLoggerModal from '../components/diary/MealLoggerModal';
+import api from '../services/api';
+
+const DashboardPage = () => {
+  const [goals, setGoals] = useState(null);
+  const [meals, setMeals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const getLocalDateString = (d) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const [date, setDate] = useState(getLocalDateString(new Date()));
+  const [mealType, setMealType] = useState('All');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [goalsRes, mealsRes] = await Promise.all([
+          api.get(`/goals?date=${date}`),
+          api.get(`/meals?date=${date}&mealType=${mealType}`)
+        ]);
+        if (goalsRes.data.success) setGoals(goalsRes.data.data);
+        if (mealsRes.data.success) setMeals(mealsRes.data.data);
+      } catch (error) {
+        console.error("Dashboard fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+
+    // Listen for custom event triggered by the AI ChatBot to auto-refresh data
+    const handleDataChanged = () => fetchData();
+    window.addEventListener('appDataChanged', handleDataChanged);
+
+    return () => {
+      window.removeEventListener('appDataChanged', handleDataChanged);
+    };
+  }, [date, mealType]);
+
+  const handleMealAdded = (newMeal) => {
+    setMeals(prev => [newMeal, ...prev]);
+  };
+
+  const handleMealUpdated = (updatedMeal) => {
+    setMeals(prev => prev.map(m => m.id === updatedMeal.id ? updatedMeal : m));
+  };
+
+  const handleMealDeleted = (deletedId) => {
+    setMeals(prev => prev.filter(m => m.id !== deletedId));
+  };
+
+  const totalCalories = meals.reduce((sum, meal) => sum + (meal.calories || 0), 0);
+  const totalProtein = meals.reduce((sum, meal) => sum + (meal.protein || 0), 0);
+  const totalCarbs = meals.reduce((sum, meal) => sum + (meal.carbs || 0), 0);
+  const totalFat = meals.reduce((sum, meal) => sum + (meal.fat || 0), 0);
+
+  return (
+    <div className="flex flex-col gap-8 w-full relative">
+      <WelcomeBanner onAddMeal={() => setIsModalOpen(true)} />
+      
+      {/* Filters Toolbar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/40 shadow-sm">
+        <div className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-on-surface-variant text-[20px]">filter_list</span>
+          <span className="font-title-md text-on-surface font-semibold">Dashboard Filters</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <input 
+            type="date" 
+            value={date} 
+            onChange={e => setDate(e.target.value)}
+            className="h-[40px] px-3 bg-surface-container border border-outline-variant/40 rounded-xl text-[13px] text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer"
+          />
+          <div className="relative">
+            <select 
+              value={mealType} 
+              onChange={e => setMealType(e.target.value)}
+              className="h-[40px] pl-4 pr-10 bg-surface-container border border-outline-variant/40 hover:border-outline-variant/80 rounded-xl text-[13px] font-semibold text-on-surface transition-all focus:outline-none appearance-none cursor-pointer"
+            >
+              <option value="All">All Meals</option>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
+              <option value="Snacks">Snacks</option>
+            </select>
+            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <CalorieOverviewCard consumed={totalCalories} target={goals?.targetCalories || 2000} />
+        <MacronutrientsCard 
+          protein={{ consumed: totalProtein, target: goals?.targetProtein || 150 }}
+          carbs={{ consumed: totalCarbs, target: goals?.targetCarbs || 200 }}
+          fat={{ consumed: totalFat, target: goals?.targetFat || 65 }}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="lg:col-span-8">
+          <MealsList
+            meals={meals}
+            loading={loading}
+            onAddMeal={() => setIsModalOpen(true)}
+            onMealUpdated={handleMealUpdated}
+            onMealDeleted={handleMealDeleted}
+          />
+        </div>
+        <div className="lg:col-span-4">
+          <WeightGoalCard currentWeight={goals?.currentWeight || 70} targetWeight={goals?.targetWeight || 65} />
+        </div>
+      </div>
+
+      <WeeklyChart />
+
+      <MealLoggerModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={(newMeal) => {
+          setIsModalOpen(false);
+          handleMealAdded(newMeal);
+        }}
+      />
+    </div>
+  );
+};
+
+export default DashboardPage;
