@@ -20,7 +20,7 @@ const AuthPage = () => {
       </div>
 
       {/* Global Header */}
-      <header className="w-full pt-8 pb-4 px-6 max-w-6xl mx-auto flex items-center justify-between">
+      <header className="w-full pt-8 pb-4 px-6 max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
         <a href="/" className="inline-flex items-center gap-2.5 transition-opacity hover:opacity-85 focus:outline-none group">
           <div className="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center transition-transform group-hover:scale-105 shadow-[0_2px_8px_rgba(126,87,194,0.12)]">
             <span className="material-symbols-outlined text-[18px] text-primary">spa</span>

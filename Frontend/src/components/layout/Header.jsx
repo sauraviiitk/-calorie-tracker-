@@ -10,7 +10,7 @@ const pageTitles = {
   '/scanner': 'AI Scanner',
 };
 
-const Header = () => {
+const Header = ({ setMobileMenuOpen }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,12 +43,18 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-64 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-8">
+    <header className="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-4 sm:px-8 transition-all duration-300">
       {/* Left - breadcrumb */}
-      <div className="flex items-center gap-2">
-        <span className="font-body-sm text-body-sm text-on-surface-variant">App</span>
-        <span className="material-symbols-outlined text-on-surface-variant text-[14px]">chevron_right</span>
-        <span className="font-title-md text-title-md text-on-surface font-semibold">{pageTitle}</span>
+      <div className="flex items-center gap-1 sm:gap-2">
+        <button 
+          onClick={() => setMobileMenuOpen(true)}
+          className="lg:hidden p-2 -ml-2 mr-1 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center justify-center"
+        >
+          <span className="material-symbols-outlined text-[24px]">menu</span>
+        </button>
+        <span className="font-body-sm text-body-sm text-on-surface-variant hidden sm:inline">App</span>
+        <span className="material-symbols-outlined text-on-surface-variant text-[14px] hidden sm:inline">chevron_right</span>
+        <span className="font-title-md text-title-md text-on-surface font-semibold truncate max-w-[150px] sm:max-w-none">{pageTitle}</span>
       </div>
 
       {/* Right - actions */}

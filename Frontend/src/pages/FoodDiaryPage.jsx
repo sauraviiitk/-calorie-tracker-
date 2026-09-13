@@ -20,9 +20,9 @@ const MEAL_ICONS = {
 const DateNavigator = ({ date, onPrev, onNext, onToday }) => {
   const isToday = new Date().toDateString() === date.toDateString();
   return (
-    <div className="flex items-center gap-2">
-      <button onClick={onPrev} className="w-9 h-9 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors" title="Previous day">
-        <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+    <div className="flex items-center gap-1 sm:gap-2">
+      <button onClick={onPrev} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors" title="Previous day">
+        <span className="material-symbols-outlined text-[18px] sm:text-[20px]">chevron_left</span>
       </button>
       <div className="flex items-center justify-center min-w-[140px] px-2">
         <span className="font-title-md text-on-surface font-semibold text-[15px]">
@@ -33,13 +33,13 @@ const DateNavigator = ({ date, onPrev, onNext, onToday }) => {
       <button 
         onClick={onNext} 
         disabled={isToday || date > new Date()}
-        className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${isToday || date > new Date() ? 'text-outline-variant cursor-not-allowed opacity-50' : 'hover:bg-surface-container-high text-on-surface-variant'}`} 
+        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-colors ${isToday || date > new Date() ? 'text-outline-variant cursor-not-allowed opacity-50' : 'hover:bg-surface-container-high text-on-surface-variant'}`} 
         title="Next day"
       >
-        <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+        <span className="material-symbols-outlined text-[18px] sm:text-[20px]">chevron_right</span>
       </button>
       {!isToday && (
-        <button onClick={onToday} className="ml-1 px-4 py-1.5 rounded-full bg-primary text-white text-[13px] font-semibold hover:bg-primary/90 transition-all shadow-sm">
+        <button onClick={onToday} className="ml-0 sm:ml-1 px-3 sm:px-4 py-1.5 rounded-full bg-primary text-white text-[12px] sm:text-[13px] font-semibold hover:bg-primary/90 transition-all shadow-sm">
           Today
         </button>
       )}
@@ -59,8 +59,8 @@ const NutritionSummary = ({ meals, goals }) => {
   const pct = Math.min((total.calories / targetCal) * 100, 100);
 
   return (
-    <div className="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/60 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-surface-container-lowest rounded-2xl p-4 sm:p-6 border border-outline-variant/60 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-1">
         <h2 className="font-title-lg text-on-surface font-semibold text-[18px]">Today's Nutrition</h2>
         <span className="font-label-md text-[14px] font-medium text-on-surface-variant">
           {Math.round(targetCal - total.calories)} kcal remaining
@@ -109,7 +109,7 @@ const MealSection = ({ type, meals, onAddFood, onEditMeal, isEditable = true }) 
   return (
     <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 shadow-sm overflow-hidden flex flex-col">
       {/* Section header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/40 bg-surface-container-lowest/50">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-outline-variant/40 bg-surface-container-lowest/50">
         <div className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl ${cfg.color} flex items-center justify-center flex-shrink-0`}>
             <span className="material-symbols-outlined text-[20px]">{cfg.icon}</span>
@@ -140,9 +140,9 @@ const MealSection = ({ type, meals, onAddFood, onEditMeal, isEditable = true }) 
               {meals.map((meal) => (
                 <div
                   key={meal.id}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-surface-container-low transition-colors group border-b border-outline-variant/20 last:border-0"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-4 hover:bg-surface-container-low transition-colors group border-b border-outline-variant/20 last:border-0 gap-3 sm:gap-0"
                 >
-                  <div className="flex flex-col min-w-0 pr-4">
+                  <div className="flex flex-col min-w-0 pr-0 sm:pr-4">
                     <span className="font-title-sm text-on-surface font-medium text-[15px] leading-tight mb-0.5 truncate">{meal.name}</span>
                     {(meal.quantity && meal.unit) && (
                       <span className="font-body-sm text-on-surface-variant text-[13px]">{meal.quantity} {meal.unit}</span>
@@ -165,7 +165,7 @@ const MealSection = ({ type, meals, onAddFood, onEditMeal, isEditable = true }) 
             </div>
             {/* Add Food button for populated lists */}
             {isEditable && (
-              <div className="px-6 py-4 border-t border-outline-variant/20 bg-surface-container-lowest/30">
+              <div className="px-4 sm:px-6 py-4 border-t border-outline-variant/20 bg-surface-container-lowest/30">
                 <button
                   onClick={() => onAddFood(type)}
                   className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-[14px] font-medium"
@@ -262,7 +262,7 @@ const FoodDiaryPage = () => {
   const isEditable = isEditableDate(date);
 
   return (
-    <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-8 lg:px-12 pb-12 flex flex-col gap-8">
+    <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-8 lg:px-12 pb-12 flex flex-col gap-6 sm:gap-8 overflow-x-hidden">
       {/* Page title + Date nav + Import button */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-4">
         <div className="flex flex-col gap-1">

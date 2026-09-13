@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-const Sidebar = () => {
+const Sidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
   const { logout, user } = useAuth();
 
   const navItems = [
@@ -13,7 +13,15 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between py-6">
+    <>
+      {/* Mobile Backdrop */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+      <aside className={`fixed left-0 top-0 h-full w-64 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between py-6 transition-transform duration-300 lg:translate-x-0 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className="flex flex-col gap-6">
         <div className="px-6 flex items-center gap-3">
           <img
@@ -28,6 +36,7 @@ const Sidebar = () => {
             <NavLink
               key={item.label}
               to={item.path}
+              onClick={() => setMobileMenuOpen(false)}
               className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-label-lg text-label-lg font-medium ${isActive
                 ? 'bg-primary-container text-on-surface'
                 : 'text-on-surface-variant hover:bg-surface-container-high'
@@ -64,7 +73,8 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

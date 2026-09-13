@@ -88,19 +88,19 @@ const DashboardPage = () => {
           <span className="material-symbols-outlined text-on-surface-variant text-[20px]">filter_list</span>
           <span className="font-title-md text-on-surface font-semibold">Dashboard Filters</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           <input 
             type="date" 
             value={date}
             max={getLocalDateString(new Date())}
             onChange={e => setDate(e.target.value)}
-            className="h-[40px] px-3 bg-surface-container border border-outline-variant/40 rounded-xl text-[13px] text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer"
+            className="h-[40px] px-3 bg-surface-container border border-outline-variant/40 rounded-xl text-[13px] text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer w-full sm:w-auto"
           />
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <select 
               value={mealType} 
               onChange={e => setMealType(e.target.value)}
-              className="h-[40px] pl-4 pr-10 bg-surface-container border border-outline-variant/40 hover:border-outline-variant/80 rounded-xl text-[13px] font-semibold text-on-surface transition-all focus:outline-none appearance-none cursor-pointer"
+              className="h-[40px] pl-4 pr-10 bg-surface-container border border-outline-variant/40 hover:border-outline-variant/80 rounded-xl text-[13px] font-semibold text-on-surface transition-all focus:outline-none appearance-none cursor-pointer w-full"
             >
               <option value="All">All Meals</option>
               <option value="Breakfast">Breakfast</option>

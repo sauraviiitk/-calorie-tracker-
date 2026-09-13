@@ -180,10 +180,10 @@ const ChatBotFAB = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
       {/* Chat Popover */}
       {isOpen && (
-        <div className="mb-4 bg-surface-container-lowest rounded-2xl w-[380px] max-h-[600px] shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-outline-variant/50 flex flex-col overflow-hidden"
+        <div className="mb-4 bg-surface-container-lowest rounded-2xl w-[calc(100vw-32px)] sm:w-[380px] h-[min(calc(100vh-120px),600px)] sm:h-auto sm:max-h-[600px] shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-outline-variant/50 flex flex-col overflow-hidden"
           style={{ animation: 'slideUp 0.2s ease-out' }}>
 
           {/* Header */}

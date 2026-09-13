@@ -33,8 +33,9 @@ const WeeklyChart = () => {
         </div>
       </div>
 
-      <div className="relative pt-6 pb-2">
-        <div className="relative flex h-72 w-full">
+      <div className="relative pt-6 pb-2 overflow-x-auto custom-scrollbar">
+        <div className="min-w-[500px]">
+          <div className="relative flex h-72 w-full">
           {/* Y Axis */}
           <div className="flex flex-col justify-between items-end pr-3 pb-8 text-label-sm font-medium text-on-surface-variant/70 select-none w-16 flex-shrink-0">
             <span>2,500</span>
@@ -138,6 +139,7 @@ const WeeklyChart = () => {
               <span className="text-[11px] text-outline/60 italic font-normal mt-0.5">No data</span>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </Card>

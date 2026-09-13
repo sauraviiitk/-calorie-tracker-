@@ -202,7 +202,7 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
           </div>
 
           {/* Quantity + Unit */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className={labelClass}>Quantity</label>
               <input type="number" placeholder="e.g. 300" min="0" value={quantity}
@@ -235,7 +235,7 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
             </div>
 
             {/* Three macro inputs */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { label: 'Protein (g)', val: protein, set: setProtein, color: 'text-[#7e57c2]' },
                 { label: 'Carbs (g)',   val: carbs,   set: setCarbs,   color: 'text-[#22c55e]' },
@@ -315,9 +315,9 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-outline-variant/60 bg-surface-container-low">
-          <Button variant="ghost" onClick={handleClose}>Cancel</Button>
-          <Button variant="primary" onClick={handleSave} disabled={loading || !isFormValid()}>
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 p-6 border-t border-outline-variant/60 bg-surface-container-low">
+          <Button variant="ghost" onClick={handleClose} className="w-full sm:w-auto">Cancel</Button>
+          <Button variant="primary" onClick={handleSave} disabled={loading || !isFormValid()} className="w-full sm:w-auto">
             {loading ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-on-primary/40 border-t-on-primary rounded-full animate-spin" />

@@ -234,30 +234,30 @@ const ReportsPage = () => {
           <p className="text-on-surface-variant text-[14px]">See how your intake compares with your daily targets.</p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           {dateRangeType === 'custom' && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <input 
                 type="date" 
                 value={customStart} 
                 onChange={e => setCustomStart(e.target.value)}
-                className="h-[40px] px-3 bg-surface-container-lowest border border-outline-variant/60 rounded-xl text-[13px] text-on-surface focus:outline-none focus:border-primary"
+                className="h-[40px] px-3 bg-surface-container-lowest border border-outline-variant/60 rounded-xl text-[13px] text-on-surface focus:outline-none focus:border-primary w-full sm:w-auto"
               />
               <span className="text-on-surface-variant text-[13px] font-medium">to</span>
               <input 
                 type="date" 
                 value={customEnd} 
                 onChange={e => setCustomEnd(e.target.value)}
-                className="h-[40px] px-3 bg-surface-container-lowest border border-outline-variant/60 rounded-xl text-[13px] text-on-surface focus:outline-none focus:border-primary"
+                className="h-[40px] px-3 bg-surface-container-lowest border border-outline-variant/60 rounded-xl text-[13px] text-on-surface focus:outline-none focus:border-primary w-full sm:w-auto"
               />
             </div>
           )}
           
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <select 
               value={dateRangeType} 
               onChange={e => setDateRangeType(e.target.value)}
-              className="h-[40px] pl-4 pr-10 bg-surface-container border border-outline-variant/40 hover:border-outline-variant/80 rounded-xl text-[13px] font-semibold text-on-surface transition-all focus:outline-none appearance-none cursor-pointer"
+              className="h-[40px] pl-4 pr-10 bg-surface-container border border-outline-variant/40 hover:border-outline-variant/80 rounded-xl text-[13px] font-semibold text-on-surface transition-all focus:outline-none appearance-none cursor-pointer w-full"
             >
               <option value="7_days">7 Days</option>
               <option value="15_days">15 Days</option>
@@ -266,11 +266,11 @@ const ReportsPage = () => {
             <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
           </div>
 
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <select 
               value={mealTypeFilter} 
               onChange={e => setMealTypeFilter(e.target.value)}
-              className="h-[40px] pl-4 pr-10 bg-surface-container border border-outline-variant/40 hover:border-outline-variant/80 rounded-xl text-[13px] font-semibold text-on-surface transition-all focus:outline-none appearance-none cursor-pointer"
+              className="h-[40px] pl-4 pr-10 bg-surface-container border border-outline-variant/40 hover:border-outline-variant/80 rounded-xl text-[13px] font-semibold text-on-surface transition-all focus:outline-none appearance-none cursor-pointer w-full"
             >
               <option value="All">All Meals</option>
               <option value="Breakfast">Breakfast</option>

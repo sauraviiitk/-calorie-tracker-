@@ -266,7 +266,7 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3 mt-5">
+              <div className="flex flex-col-reverse sm:flex-row gap-3 mt-5">
                 <button onClick={handleClose}
                   className="flex-1 px-4 py-2.5 rounded-xl border border-outline-variant text-on-surface font-medium text-sm hover:bg-surface-container transition-colors">
                   Cancel
@@ -358,7 +358,7 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
                 </p>
               )}
 
-              <div className="flex gap-3">
+              <div className="flex flex-col-reverse sm:flex-row gap-3">
                 <button onClick={reset}
                   className="flex-1 px-4 py-2.5 rounded-xl border border-outline-variant text-on-surface font-medium text-sm hover:bg-surface-container transition-colors">
                   Import Another

@@ -135,7 +135,7 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
                 <input type="text" value={name} onChange={e => setName(e.target.value)} className={inputClass} autoFocus />
               </div>
 
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div>
                   <label className={labelClass}>Calories <span className="text-error">*</span></label>
                   <input type="number" min="0" value={calories} onChange={e => setCalories(e.target.value)} className={inputClass} />
@@ -158,10 +158,10 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between gap-3 p-6 border-t border-outline-variant/60 bg-surface-container-low">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-6 border-t border-outline-variant/60 bg-surface-container-low">
           {confirmDelete ? (
             <>
-              <div className="flex items-center gap-3 ml-auto w-full justify-end">
+              <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 w-full sm:ml-auto sm:w-auto sm:justify-end">
                 <Button variant="ghost" onClick={() => setConfirmDelete(false)}>Cancel</Button>
                 <button
                   onClick={handleDelete}
@@ -183,9 +183,9 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
                 Delete
               </button>
 
-              <div className="flex items-center gap-3 ml-auto">
-                <Button variant="ghost" onClick={onClose}>Cancel</Button>
-                <Button variant="primary" onClick={handleSave} disabled={loading || !isFormValid()}>
+              <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto sm:ml-auto">
+                <Button variant="ghost" onClick={onClose} className="w-full sm:w-auto">Cancel</Button>
+                <Button variant="primary" onClick={handleSave} disabled={loading || !isFormValid()} className="w-full sm:w-auto">
                   {loading ? 'Saving...' : 'Save Changes'}
                 </Button>
               </div>
