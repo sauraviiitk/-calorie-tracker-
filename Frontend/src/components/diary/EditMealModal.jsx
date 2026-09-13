@@ -85,13 +85,19 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-outline-variant/60">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-secondary-container flex items-center justify-center">
-              <span className="material-symbols-outlined text-secondary text-[20px]">edit</span>
+            <div className={`w-9 h-9 rounded-xl ${confirmDelete ? 'bg-error-container text-error' : 'bg-secondary-container text-secondary'} flex items-center justify-center`}>
+              <span className="material-symbols-outlined text-[20px]">{confirmDelete ? 'delete' : 'edit'}</span>
             </div>
             <div>
-              <h2 className="font-headline-sm text-headline-sm font-semibold text-on-surface">Edit Meal</h2>
+              <h2 className="font-headline-sm text-headline-sm font-semibold text-on-surface">
+                {confirmDelete ? 'Delete Meal' : 'Edit Meal'}
+              </h2>
               <p className="text-[11px] text-on-surface-variant mt-0.5">
-                Fields marked <span className="text-error font-bold">*</span> are required
+                {confirmDelete ? (
+                  'Are you sure you want to delete this meal?'
+                ) : (
+                  <>Fields marked <span className="text-error font-bold">*</span> are required</>
+                )}
               </p>
             </div>
           </div>
@@ -106,58 +112,74 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
             <ErrorAlert error={errorObj} onRetry={() => setErrorObj(null)} />
           )}
 
-          <div>
-            <label className={labelClass}>Food Name <span className="text-error">*</span></label>
-            <input type="text" value={name} onChange={e => setName(e.target.value)} className={inputClass} autoFocus />
-          </div>
+          {confirmDelete ? (
+            <div className="flex flex-col gap-2 p-4 bg-error-container/20 border border-error/20 rounded-xl">
+              <span className="font-title-md font-semibold text-on-surface">{meal.name}</span>
+              <span className="text-[13px] text-error font-medium">This action cannot be undone.</span>
+            </div>
+          ) : (
+            <>
+              <div>
+                <label className={labelClass}>Food Name <span className="text-error">*</span></label>
+                <input type="text" value={name} onChange={e => setName(e.target.value)} className={inputClass} autoFocus />
+              </div>
 
-          <div className="grid grid-cols-4 gap-3">
-            <div>
-              <label className={labelClass}>Calories <span className="text-error">*</span></label>
-              <input type="number" min="0" value={calories} onChange={e => setCalories(e.target.value)} className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}>Protein <span className="text-error">*</span></label>
-              <input type="number" min="0" value={protein} onChange={e => setProtein(e.target.value)} className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}>Carbs <span className="text-error">*</span></label>
-              <input type="number" min="0" value={carbs} onChange={e => setCarbs(e.target.value)} className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}>Fat <span className="text-error">*</span></label>
-              <input type="number" min="0" value={fat} onChange={e => setFat(e.target.value)} className={inputClass} />
-            </div>
-          </div>
+              <div className="grid grid-cols-4 gap-3">
+                <div>
+                  <label className={labelClass}>Calories <span className="text-error">*</span></label>
+                  <input type="number" min="0" value={calories} onChange={e => setCalories(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className={labelClass}>Protein <span className="text-error">*</span></label>
+                  <input type="number" min="0" value={protein} onChange={e => setProtein(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className={labelClass}>Carbs <span className="text-error">*</span></label>
+                  <input type="number" min="0" value={carbs} onChange={e => setCarbs(e.target.value)} className={inputClass} />
+                </div>
+                <div>
+                  <label className={labelClass}>Fat <span className="text-error">*</span></label>
+                  <input type="number" min="0" value={fat} onChange={e => setFat(e.target.value)} className={inputClass} />
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between gap-3 p-6 border-t border-outline-variant/60 bg-surface-container-low">
-          {/* Delete */}
-          <button
-            onClick={handleDelete}
-            disabled={deleting}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-medium transition-all ${
-              confirmDelete
-                ? 'bg-error text-on-error hover:bg-error/90'
-                : 'text-error hover:bg-error-container/50'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[16px]">delete</span>
-            {deleting ? 'Deleting...' : confirmDelete ? 'Confirm Delete' : 'Delete'}
-          </button>
-          {confirmDelete && (
-            <button onClick={() => setConfirmDelete(false)} className="text-[13px] text-on-surface-variant hover:text-on-surface transition-colors underline">
-              Cancel
-            </button>
-          )}
+          {confirmDelete ? (
+            <>
+              <div className="flex items-center gap-3 ml-auto w-full justify-end">
+                <Button variant="ghost" onClick={() => setConfirmDelete(false)}>Cancel</Button>
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-medium transition-all bg-error text-on-error hover:bg-error/90 disabled:opacity-50"
+                >
+                  <span className="material-symbols-outlined text-[16px]">delete</span>
+                  {deleting ? 'Deleting...' : 'Confirm Delete'}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => setConfirmDelete(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-medium transition-all text-error hover:bg-error-container/50"
+              >
+                <span className="material-symbols-outlined text-[16px]">delete</span>
+                Delete
+              </button>
 
-          <div className="flex items-center gap-3 ml-auto">
-            <Button variant="ghost" onClick={onClose}>Cancel</Button>
-            <Button variant="primary" onClick={handleSave} disabled={loading || !isFormValid()}>
-              {loading ? 'Saving...' : 'Save Changes'}
-            </Button>
-          </div>
+              <div className="flex items-center gap-3 ml-auto">
+                <Button variant="ghost" onClick={onClose}>Cancel</Button>
+                <Button variant="primary" onClick={handleSave} disabled={loading || !isFormValid()}>
+                  {loading ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
