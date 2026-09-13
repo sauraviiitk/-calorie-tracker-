@@ -5,7 +5,7 @@ import EditMealModal from '../components/diary/EditMealModal';
 import PdfImportModal from '../components/diary/PdfImportModal';
 import ErrorState from '../components/ui/ErrorState';
 import { normalizeApiError } from '../utils/errorHandler';
-import { isEditableDate } from '../utils/dateUtils';
+import { isEditableDate, getLocalDateString } from '../utils/dateUtils';
 
 const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
 
@@ -198,9 +198,10 @@ const FoodDiaryPage = () => {
     setLoading(true);
     setErrorObj(null);
     try {
+      const dateStr = getLocalDateString(date);
       const [mealsRes, goalsRes] = await Promise.all([
-        api.get(`/meals?date=${date.toISOString()}`),
-        api.get('/goals'),
+        api.get(`/meals?date=${dateStr}`),
+        api.get(`/goals?date=${dateStr}`),
       ]);
       if (mealsRes.data.success) setMeals(mealsRes.data.data);
       if (goalsRes.data.success) setGoals(goalsRes.data.data);
