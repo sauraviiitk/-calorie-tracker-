@@ -40,7 +40,7 @@ const WeeklyCalorieChart = ({ data, targetCalories }) => {
   return (
     <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-outline-variant/60 flex flex-col w-full">
       <div className="mb-6">
-        <h3 className="font-title-lg text-title-lg font-semibold text-on-surface">Weekly Calorie Intake</h3>
+        <h3 className="font-title-lg text-title-lg font-semibold text-on-surface">Calorie Intake Trends</h3>
         <p className="text-[13px] text-on-surface-variant mt-1">Your daily calorie intake compared with your target.</p>
       </div>
 

@@ -72,9 +72,9 @@ const ReportsPage = () => {
         
         start.setHours(0, 0, 0, 0);
         startDateIso = start.toISOString();
-      } else if (dateRangeType === '30_days') {
+      } else if (dateRangeType === '15_days') {
         const start = new Date();
-        start.setDate(today.getDate() - 29);
+        start.setDate(today.getDate() - 14);
         startDateLocal = getLocalDateString(start);
         
         start.setHours(0, 0, 0, 0);
@@ -260,7 +260,7 @@ const ReportsPage = () => {
               className="h-[40px] pl-4 pr-10 bg-surface-container border border-outline-variant/40 hover:border-outline-variant/80 rounded-xl text-[13px] font-semibold text-on-surface transition-all focus:outline-none appearance-none cursor-pointer"
             >
               <option value="7_days">7 Days</option>
-              <option value="30_days">30 Days</option>
+              <option value="15_days">15 Days</option>
               <option value="custom">Custom Range</option>
             </select>
             <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
