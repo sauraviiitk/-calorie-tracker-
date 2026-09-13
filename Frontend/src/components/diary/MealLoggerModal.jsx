@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import Button from '../ui/Button';
-import Button from '../ui/Button';
 import ErrorAlert from '../ui/ErrorAlert';
 import { normalizeApiError } from '../../utils/errorHandler';
 import api from '../../services/api';
