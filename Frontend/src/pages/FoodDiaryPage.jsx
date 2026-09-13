@@ -24,11 +24,11 @@ const DateNavigator = ({ date, onPrev, onNext, onToday }) => {
       <button onClick={onPrev} className="w-9 h-9 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors" title="Previous day">
         <span className="material-symbols-outlined text-[20px]">chevron_left</span>
       </button>
-      <div className="flex flex-col items-center justify-center min-w-[140px]">
+      <div className="flex items-center justify-center min-w-[140px] px-2">
         <span className="font-title-md text-on-surface font-semibold text-[15px]">
           {date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          {isToday && <span className="ml-1 text-primary text-[14px]"> (Today)</span>}
         </span>
-        {isToday && <span className="font-label-sm text-[12px] text-primary font-semibold mt-0.5">Today</span>}
       </div>
       <button 
         onClick={onNext} 
@@ -39,7 +39,7 @@ const DateNavigator = ({ date, onPrev, onNext, onToday }) => {
         <span className="material-symbols-outlined text-[20px]">chevron_right</span>
       </button>
       {!isToday && (
-        <button onClick={onToday} className="ml-1 px-3 py-1.5 rounded-full bg-primary-container text-primary text-[12px] font-semibold hover:bg-primary hover:text-on-primary transition-all">
+        <button onClick={onToday} className="ml-1 px-4 py-1.5 rounded-full bg-primary text-white text-[13px] font-semibold hover:bg-primary/90 transition-all shadow-sm">
           Today
         </button>
       )}
@@ -294,12 +294,6 @@ const FoodDiaryPage = () => {
         </div>
       ) : (
         <>
-          {!isEditable && (
-            <div className="bg-[#fff8e1] border border-[#f59e0b]/30 rounded-xl p-4 flex items-center gap-3 text-[#b45309]">
-              <span className="material-symbols-outlined text-[20px]">info</span>
-              <p className="text-[14px] font-medium">You're viewing a previous day. Meal changes are only available for today.</p>
-            </div>
-          )}
           {/* Nutrition Summary */}
           {loading ? (
         <div className="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/60 animate-pulse h-[200px]" />

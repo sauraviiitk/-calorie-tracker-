@@ -47,28 +47,31 @@ const WeeklyCalorieChart = ({ data, targetCalories }) => {
       <div className="h-[300px] w-full">
         {chartData && chartData.length > 0 ? (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.06)" />
+            <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }} barGap={8}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
               <XAxis 
                 dataKey="name" 
                 axisLine={false} 
                 tickLine={false} 
-                tick={{ fill: 'var(--on-surface-variant)', fontSize: 12, fontWeight: 500 }}
+                tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
                 dy={10}
               />
               <YAxis 
                 axisLine={false} 
                 tickLine={false} 
-                tick={{ fill: 'var(--on-surface-variant)', fontSize: 12 }}
+                tick={{ fill: '#64748b', fontSize: 12 }}
               />
               <Tooltip 
                 content={<CustomTooltip />} 
-                cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                cursor={{ fill: '#f8fafc' }}
               />
-              <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
+              <Legend 
+                wrapperStyle={{ paddingTop: '24px', fontSize: '13px', fontWeight: 500 }} 
+                iconType="circle"
+              />
               
-              <Bar dataKey="target" name="Daily Target" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={32} />
-              <Bar dataKey="calories" name="Actual Intake" fill="#f97316" radius={[4, 4, 0, 0]} maxBarSize={32} />
+              <Bar dataKey="calories" name="Actual Intake" fill="#7e57c2" radius={[6, 6, 0, 0]} maxBarSize={40} />
+              <Bar dataKey="target" name="Daily Target" fill="#e2e8f0" radius={[6, 6, 0, 0]} maxBarSize={40} />
               
             </BarChart>
           </ResponsiveContainer>

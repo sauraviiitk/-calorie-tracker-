@@ -113,12 +113,6 @@ const DashboardPage = () => {
         </div>
       </div>
       
-      {!isEditable && (
-        <div className="bg-[#fff8e1] border border-[#f59e0b]/30 rounded-xl p-4 flex items-center gap-3 text-[#b45309]">
-          <span className="material-symbols-outlined text-[20px]">info</span>
-          <p className="text-[14px] font-medium">You're viewing a previous day. Meal changes are only available for today.</p>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <CalorieOverviewCard consumed={totalCalories} target={goals?.targetCalories || 2000} />
