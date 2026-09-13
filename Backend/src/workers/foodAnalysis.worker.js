@@ -15,6 +15,7 @@ const { getBullMQConnection } = require('../config/redis');
 const geminiVisionService = require('../services/geminiVisionService');
 const prisma = require('../config/db');
 const { QUEUE_NAME } = require('../queues/foodAnalysis.queue');
+const { formatAiError } = require('../utils/aiErrorHandler');
 
 // ---- Startup ----
 console.log('[Worker] food-analysis worker starting...');
@@ -99,7 +100,7 @@ worker.on('failed', async (job, err) => {
         where: { imageId: job.id },
         data: {
           status: 'FAILED',
-          errorMsg: err.message || 'Unknown error during AI analysis',
+          errorMsg: formatAiError(err) || 'Unknown error during AI analysis',
         },
       });
       console.log(`[Worker] Marked job ${job.id} as FAILED in DB`);

@@ -14,6 +14,7 @@ const { QUEUE_NAME } = require('../queues/pdfImport.queue');
 const { GoogleGenAI } = require('@google/genai');
 const mealService = require('../services/mealService');
 const fs = require('fs');
+const { formatAiError } = require('../utils/aiErrorHandler');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -178,7 +179,7 @@ worker.on('failed', async (job, err) => {
         where: { imageId: job.id },
         data: {
           status: 'FAILED',
-          errorMsg: err.message || 'Unknown error during PDF parsing',
+          errorMsg: formatAiError(err) || 'Unknown error during PDF parsing',
         },
       });
       console.log(`[Worker:PDF] Marked job ${job.id} as FAILED in DB`);

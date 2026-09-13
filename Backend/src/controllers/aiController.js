@@ -6,6 +6,7 @@ const fs = require('fs');
 const { getFoodAnalysisQueue } = require('../queues/foodAnalysis.queue');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
+const { formatAiError } = require('../utils/aiErrorHandler');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -304,7 +305,7 @@ exports.chat = async (req, res) => {
 
           case 'error':
             console.error('Gemini stream error event:', chunk.error);
-            sendEvent({ type: 'error', text: chunk.error?.message || 'AI encountered an error.' });
+            sendEvent({ type: 'error', text: formatAiError(chunk.error) });
             res.write('data: [DONE]\n\n');
             res.end();
             return;
@@ -351,7 +352,7 @@ exports.chat = async (req, res) => {
 
   } catch (error) {
     console.error('AI Chat Error:', error);
-    sendEvent({ type: 'error', text: error.message || 'Sorry, something went wrong. Please try again.' });
+    sendEvent({ type: 'error', text: formatAiError(error) });
     res.write('data: [DONE]\n\n');
     res.end();
   }
