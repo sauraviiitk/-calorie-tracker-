@@ -86,7 +86,7 @@ const WeeklyChart = () => {
               
               {/* Today's Bar */}
               <div className="flex flex-col items-center h-full justify-end relative cursor-pointer group">
-                <div className="absolute -top-12 flex flex-col items-center z-30 pointer-events-none">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-12 flex flex-col items-center z-30 pointer-events-none">
                   <div className="bg-inverse-surface text-inverse-on-surface px-3 py-1.5 rounded-xl shadow-lg flex flex-col items-center whitespace-nowrap">
                     <span className="font-title-md text-[13px] font-bold text-inverse-on-surface leading-tight">Sat · 1,980 kcal</span>
                     <span className="text-[11px] text-primary-fixed-dim font-medium leading-none mt-0.5">Daily Target: 2,200 kcal | Diff: -220 kcal</span>
