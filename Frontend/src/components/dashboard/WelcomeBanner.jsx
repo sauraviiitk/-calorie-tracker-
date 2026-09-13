@@ -29,14 +29,7 @@ const WelcomeBanner = ({ onAddMeal, isEditable = true }) => {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <div className="relative flex items-center">
-          <span className="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-[20px]">search</span>
-          <input
-            type="text"
-            placeholder="Search food library..."
-            className="h-11 pl-10 pr-4 rounded-xl bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/60 font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none shadow-sm transition-all w-48 sm:w-64"
-          />
-        </div>
+
         {isEditable && (
           <Button variant="primary" size="lg" icon="add" onClick={onAddMeal}>
             Add Meal
