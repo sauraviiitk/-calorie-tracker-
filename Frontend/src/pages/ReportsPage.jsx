@@ -153,7 +153,7 @@ const ReportsPage = () => {
       const targetFat = specificGoal ? specificGoal.targetFat : (defaultGoal?.targetFat || 65);
 
       mealsByDate[dateKey] = {
-        name: current.toLocaleDateString('en-US', { weekday: 'short' }),
+        name: current.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
         fullDate: dateKey,
         isToday: dateKey === todayStr,
         calories: 0,

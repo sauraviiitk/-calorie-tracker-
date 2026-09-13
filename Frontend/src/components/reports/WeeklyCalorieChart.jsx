@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -47,7 +47,7 @@ const WeeklyCalorieChart = ({ data, targetCalories }) => {
       <div className="h-[300px] w-full">
         {chartData && chartData.length > 0 ? (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }} barGap={8}>
+            <ComposedChart data={chartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }} barGap={8}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
               <XAxis 
                 dataKey="name" 
@@ -70,10 +70,10 @@ const WeeklyCalorieChart = ({ data, targetCalories }) => {
                 iconType="circle"
               />
               
-              <Bar dataKey="calories" name="Actual Intake" fill="#7e57c2" radius={[6, 6, 0, 0]} maxBarSize={40} />
-              <Bar dataKey="target" name="Daily Target" fill="#e2e8f0" radius={[6, 6, 0, 0]} maxBarSize={40} />
+              <Bar dataKey="calories" name="Actual Intake" fill="#7e57c2" radius={[4, 4, 0, 0]} maxBarSize={40} />
+              <Line dataKey="target" name="Daily Target" type="monotone" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" dot={false} activeDot={{ r: 4, fill: '#94a3b8' }} />
               
-            </BarChart>
+            </ComposedChart>
           </ResponsiveContainer>
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center text-on-surface-variant">
