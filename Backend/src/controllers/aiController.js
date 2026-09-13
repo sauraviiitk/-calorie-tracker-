@@ -407,11 +407,12 @@ exports.analyzeFood = asyncHandler(async (req, res, next) => {
       return next(new AppError('Food analysis service is temporarily unavailable. Please try again shortly.', 503));
     }
 
+    const jobId = crypto.randomUUID();
     const job = await queue.add('analyze', {
       userId,
       imagePath,
       fileHash,
-    });
+    }, { jobId });
 
     // Persist job record in DB (status = PENDING)
     await prisma.foodAnalysisJob.create({

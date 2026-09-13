@@ -56,11 +56,12 @@ exports.importPdf = asyncHandler(async (req, res, next) => {
       return next(new AppError('PDF import service is temporarily unavailable. Please try again shortly.', 503));
     }
 
+    const jobId = crypto.randomUUID();
     const job = await queue.add('parse', {
       userId,
       pdfPath,
       fileHash,
-    });
+    }, { jobId });
 
     // Create DB record (status = PENDING)
     await prisma.pdfImportJob.create({
