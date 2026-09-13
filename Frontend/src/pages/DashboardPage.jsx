@@ -27,10 +27,10 @@ const DashboardPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const dateStr = getLocalDateString();
-        const startOfDay = new Date();
+        const dateStr = date;
+        const startOfDay = new Date(date);
         startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date();
+        const endOfDay = new Date(date);
         endOfDay.setHours(23, 59, 59, 999);
 
         const [goalsRes, mealsRes] = await Promise.all([
