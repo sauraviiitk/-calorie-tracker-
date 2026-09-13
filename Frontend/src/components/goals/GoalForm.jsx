@@ -3,6 +3,7 @@ import Card from '../ui/Card';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import api from '../../services/api';
+import { getLocalDateString } from '../../utils/dateUtils';
 
 const GoalForm = ({ onGoalUpdated }) => {
   const [targetCalories, setTargetCalories] = useState(2000);
@@ -96,6 +97,7 @@ const GoalForm = ({ onGoalUpdated }) => {
             <div className="flex items-center gap-2">
               <input 
                 type="date"
+                min={getLocalDateString(new Date())}
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 className="h-[40px] px-3 bg-surface border border-outline-variant rounded-lg text-[13px] text-on-surface focus:outline-none focus:border-primary"

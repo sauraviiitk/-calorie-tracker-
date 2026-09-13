@@ -2,6 +2,7 @@ const prisma = require('../config/db');
 const { invalidateWeeklyReportCache } = require('../utils/cacheUtils');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
+const { getLocalDateString } = require('../utils/dateUtils');
 
 exports.createOrUpdateGoal = asyncHandler(async (req, res, next) => {
     const { targetWeight, currentWeight, targetCalories, date } = req.body;
@@ -9,6 +10,13 @@ exports.createOrUpdateGoal = asyncHandler(async (req, res, next) => {
     
     // date should be either a specific YYYY-MM-DD string or null for default
     const goalDate = date || null;
+
+    if (goalDate) {
+      const today = getLocalDateString(new Date());
+      if (goalDate < today) {
+        return next(new AppError('Goals cannot be set for past dates', 400));
+      }
+    }
 
     // Check if user already has a goal for this exact date (or null)
     let goal = await prisma.goal.findFirst({
