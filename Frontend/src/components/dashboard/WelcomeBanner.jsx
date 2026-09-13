@@ -1,8 +1,12 @@
 import React from 'react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
+import { useAuth } from '../../context/AuthContext';
 
 const WelcomeBanner = ({ onAddMeal }) => {
+  const { user } = useAuth();
+  const userName = user?.name ? user.name.split(' ')[0] : 'User';
+  
   const now = new Date();
   const hour = now.getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
@@ -13,7 +17,7 @@ const WelcomeBanner = ({ onAddMeal }) => {
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-3">
           <h1 className="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">
-            {greeting}, Saurav <span className="inline-block hover:rotate-12 transition-transform cursor-default">👋</span>
+            {greeting}, {userName} <span className="inline-block hover:rotate-12 transition-transform cursor-default">👋</span>
           </h1>
           <Badge variant="primary">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
