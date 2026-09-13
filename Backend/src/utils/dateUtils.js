@@ -3,17 +3,19 @@
  */
 
 /**
- * Returns a local YYYY-MM-DD string for a given Date object.
+ * Returns a YYYY-MM-DD string for a given Date object specifically in IST (Asia/Kolkata).
  */
 const getLocalDateString = (d = new Date()) => {
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return new Intl.DateTimeFormat('en-CA', { 
+    timeZone: 'Asia/Kolkata', 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit' 
+  }).format(d);
 };
 
 /**
- * Checks if a given date value (Date object or YYYY-MM-DD string) represents today's local date.
+ * Checks if a given date value represents today's date in IST.
  */
 const isToday = (dateValue) => {
   if (!dateValue) return false;
