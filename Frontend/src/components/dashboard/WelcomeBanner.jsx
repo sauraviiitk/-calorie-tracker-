@@ -1,5 +1,4 @@
 import React from 'react';
-import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import { useAuth } from '../../context/AuthContext';
 
@@ -17,12 +16,8 @@ const WelcomeBanner = ({ onAddMeal, isEditable = true }) => {
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center gap-3">
           <h1 className="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">
-            {greeting}, {userName} <span className="inline-block hover:rotate-12 transition-transform cursor-default">👋</span>
+            {greeting}, {userName}
           </h1>
-          <Badge variant="primary">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-            On Track
-          </Badge>
         </div>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-body-md text-body-md text-on-surface-variant">
           <span className="flex items-center gap-1.5">
