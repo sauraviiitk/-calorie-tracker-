@@ -7,8 +7,6 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const ChatBotFAB = () => {
   const { user } = useAuth();
-  
-  if (!user) return null;
 
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -178,6 +176,8 @@ const ChatBotFAB = () => {
       text: "Hi! I'm **CalorieMate AI** 🤖\n\nI can help you:\n- 📝 **Log meals** — just tell me what you ate\n- 🎯 **Check your goals** — ask \"what are my goals?\"\n- 📊 **View today's meals** — ask \"what did I eat today?\"\n- 📅 **Weekly summary** — ask \"how was my week?\"\n- 🥗 **Nutrition questions** — ask anything!\n\nWhat would you like to do?"
     }]);
   };
+
+  if (!user) return null;
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
