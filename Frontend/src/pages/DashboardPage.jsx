@@ -27,9 +27,15 @@ const DashboardPage = () => {
       setLoading(true);
       setError(null);
       try {
+        const dateStr = getLocalDateString();
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
         const [goalsRes, mealsRes] = await Promise.all([
-          api.get(`/goals?date=${date}`),
-          api.get(`/meals?date=${date}&mealType=${mealType}`)
+          api.get(`/goals?date=${dateStr}`),
+          api.get(`/meals?startDate=${startOfDay.toISOString()}&endDate=${endOfDay.toISOString()}&mealType=${mealType}`)
         ]);
         if (goalsRes.data.success) setGoals(goalsRes.data.data);
         if (mealsRes.data.success) setMeals(mealsRes.data.data);

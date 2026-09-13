@@ -199,8 +199,13 @@ const FoodDiaryPage = () => {
     setErrorObj(null);
     try {
       const dateStr = getLocalDateString(date);
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+
       const [mealsRes, goalsRes] = await Promise.all([
-        api.get(`/meals?date=${dateStr}`),
+        api.get(`/meals?startDate=${startOfDay.toISOString()}&endDate=${endOfDay.toISOString()}`),
         api.get(`/goals?date=${dateStr}`),
       ]);
       if (mealsRes.data.success) setMeals(mealsRes.data.data);

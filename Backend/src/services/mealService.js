@@ -15,15 +15,15 @@ exports.getUserMeals = async (userId, options = {}) => {
   
   if (options.startDate && options.endDate) {
     const start = new Date(options.startDate);
-    start.setHours(0, 0, 0, 0);
+    if (!String(options.startDate).includes('T')) start.setHours(0, 0, 0, 0);
     const end = new Date(options.endDate);
-    end.setHours(23, 59, 59, 999);
+    if (!String(options.endDate).includes('T')) end.setHours(23, 59, 59, 999);
     where.date = { gte: start, lte: end };
   } else if (options.dateStr) {
     const startDate = new Date(options.dateStr);
-    startDate.setHours(0, 0, 0, 0);
+    if (!String(options.dateStr).includes('T')) startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(options.dateStr);
-    endDate.setHours(23, 59, 59, 999);
+    if (!String(options.dateStr).includes('T')) endDate.setHours(23, 59, 59, 999);
     where.date = { gte: startDate, lte: endDate };
   }
 
