@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Button from '../ui/Button';
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import ErrorAlert from '../ui/ErrorAlert';
+import { normalizeApiError } from '../../utils/errorHandler';
 
 const POLL_INTERVAL_MS = 2000; // poll every 2 seconds
 
@@ -11,7 +13,7 @@ const ImageUpload = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [error, setError] = useState('');
+  const [errorObj, setErrorObj] = useState(null);
   const [saving, setSaving] = useState(false);
 
   // BullMQ job state
@@ -46,14 +48,18 @@ const ImageUpload = () => {
           setResult(jobResult);
           setLoading(false);
         } else if (status === 'FAILED') {
-          setError(jobError || 'AI analysis failed. Please try again.');
+          // Wrap the error string returned from the backend DB in our standardized error format
+          const error = typeof jobError === 'string' && jobError.trim().startsWith('{')
+             ? normalizeApiError({ response: { data: jobError } }) 
+             : { title: 'Analysis Failed', message: jobError || 'AI analysis failed. Please try again.', retryable: true, technicalDetails: jobError };
+          setErrorObj(error);
           setLoading(false);
         } else {
           // Still PENDING or PROCESSING — keep polling
           pollJobStatus(id);
         }
       } catch (err) {
-        setError('Could not check analysis status. Please refresh the page.');
+        setErrorObj(normalizeApiError(err));
         setLoading(false);
       }
     }, POLL_INTERVAL_MS);
@@ -69,7 +75,7 @@ const ImageUpload = () => {
     setPreviewUrl(url);
     setSelectedImage(file);
     setResult(null);
-    setError('');
+    setErrorObj(null);
     setJobId(null);
     setJobStatus(null);
     setLoading(true);
@@ -99,7 +105,7 @@ const ImageUpload = () => {
         }
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to upload image for analysis');
+      setErrorObj(normalizeApiError(err));
       setLoading(false);
     }
   };
@@ -126,7 +132,7 @@ const ImageUpload = () => {
     setPreviewUrl(null);
     setSelectedImage(null);
     setResult(null);
-    setError('');
+    setErrorObj(null);
     setJobId(null);
     setJobStatus(null);
     setLoading(false);
@@ -151,7 +157,7 @@ const ImageUpload = () => {
         navigate('/diary');
       }
     } catch (err) {
-      setError('Failed to save meal to diary');
+      setErrorObj(normalizeApiError(err));
       setSaving(false);
     }
   };
@@ -225,14 +231,9 @@ const ImageUpload = () => {
             )}
 
             {/* ERROR STATE */}
-            {error && !loading && (
-              <div className="flex flex-col justify-center h-full gap-4 text-error">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[24px]">error</span>
-                  <span className="font-title-md font-semibold">Analysis Failed</span>
-                </div>
-                <p>{error}</p>
-                <Button variant="outlined" onClick={handleRetry}>Try Again</Button>
+            {errorObj && !loading && (
+              <div className="mt-4">
+                <ErrorAlert error={errorObj} onRetry={handleRetry} />
               </div>
             )}
 

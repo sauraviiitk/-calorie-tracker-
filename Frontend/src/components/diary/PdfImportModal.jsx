@@ -1,5 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import api from '../../services/api';
+import ErrorState from '../ui/ErrorState';
+import { normalizeApiError } from '../../utils/errorHandler';
 
 const MEAL_TYPE_COLORS = {
   Breakfast: 'bg-amber-100 text-amber-700',
@@ -16,7 +18,7 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
   const [dragOver, setDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [result, setResult] = useState(null);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorObj, setErrorObj] = useState(null);
   const [jobId, setJobId] = useState(null);
   const fileInputRef = useRef(null);
   const pollTimerRef = useRef(null);
@@ -31,7 +33,7 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
     setPhase('idle');
     setSelectedFile(null);
     setResult(null);
-    setErrorMsg('');
+    setErrorObj(null);
     setDragOver(false);
     setJobId(null);
   };
@@ -41,18 +43,18 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
   const handleFile = (file) => {
     if (!file) return;
     if (file.type !== 'application/pdf') {
-      setErrorMsg('Only PDF files are supported. Please upload a .pdf file.');
+      setErrorObj({ title: 'Invalid File', message: 'Only PDF files are supported. Please upload a .pdf file.', retryable: true });
       setPhase('error');
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setErrorMsg('File is too large. Maximum size is 10MB.');
+      setErrorObj({ title: 'File Too Large', message: 'Maximum size is 10MB.', retryable: true });
       setPhase('error');
       return;
     }
     setSelectedFile(file);
     setPhase('ready');
-    setErrorMsg('');
+    setErrorObj(null);
   };
 
   const handleDrop = useCallback((e) => {
@@ -81,7 +83,11 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
           setResult(importResult);
           setPhase(importResult.imported > 0 ? 'success' : 'empty');
         } else if (status === 'FAILED') {
-          setErrorMsg(errorMessage || 'AI parsing failed. Please try again.');
+          // Wrap the error string returned from the backend DB in our standardized error format
+          const error = typeof errorMessage === 'string' && errorMessage.trim().startsWith('{')
+             ? normalizeApiError({ response: { data: errorMessage } }) 
+             : { title: 'Import Failed', message: errorMessage || 'AI parsing failed. Please try again.', retryable: true, technicalDetails: errorMessage };
+          setErrorObj(error);
           setPhase('error');
         } else {
           // PENDING or PROCESSING — keep polling, update phase label
@@ -89,7 +95,7 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
           pollStatus(id);
         }
       } catch (err) {
-        setErrorMsg('Could not check import status. Please refresh the page.');
+        setErrorObj(normalizeApiError(err));
         setPhase('error');
       }
     }, POLL_INTERVAL_MS);
@@ -101,7 +107,7 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
   const handleUpload = async () => {
     if (!selectedFile) return;
     setPhase('uploading');
-    setErrorMsg('');
+    setErrorObj(null);
 
     const formData = new FormData();
     formData.append('pdf', selectedFile);
@@ -125,12 +131,17 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
           pollStatus(id);
         }
       } else {
-        setErrorMsg(response.data.message || 'Import failed.');
+        // If the server returns 200/202 but success: false
+        setErrorObj({
+            title: 'Upload Failed',
+            message: response.data.message || 'Import failed.',
+            retryable: true,
+            technicalDetails: JSON.stringify(response.data)
+        });
         setPhase('error');
       }
     } catch (err) {
-      const msg = err.response?.data?.message || err.message || 'Server error during import.';
-      setErrorMsg(msg);
+      setErrorObj(normalizeApiError(err));
       setPhase('error');
     }
   };
@@ -379,25 +390,15 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
 
           {/* ── ERROR phase ── */}
           {phase === 'error' && (
-            <div className="py-6 flex flex-col items-center gap-4 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center">
-                <span className="material-symbols-outlined text-red-500 text-[32px]">error</span>
-              </div>
-              <div>
-                <p className="font-semibold text-on-surface">Import Failed</p>
-                <p className="text-sm text-on-surface-variant mt-1 max-w-[300px] break-words">{errorMsg}</p>
-              </div>
-              <div className="flex gap-3">
-                <button onClick={handleClose}
-                  className="px-4 py-2.5 rounded-xl border border-outline-variant text-on-surface font-medium text-sm hover:bg-surface-container transition-colors">
-                  Close
-                </button>
-                <button onClick={reset}
-                  className="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:bg-primary/90 transition-all">
-                  Try Again
-                </button>
-              </div>
-            </div>
+             <div className="py-2">
+                 <ErrorState error={errorObj} onRetry={reset} />
+                 <div className="flex gap-3 justify-center mt-2 px-8">
+                   <button onClick={handleClose}
+                     className="px-4 py-2.5 rounded-xl border border-outline-variant text-on-surface font-medium text-sm hover:bg-surface-container transition-colors w-full max-w-[120px]">
+                     Close
+                   </button>
+                 </div>
+             </div>
           )}
         </div>
       </div>

@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import ErrorAlert from '../components/ui/ErrorAlert';
+import { normalizeApiError } from '../utils/errorHandler';
 
 const ProfilePage = () => {
   const { user, updateUser } = useAuth();
@@ -9,14 +11,14 @@ const ProfilePage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [errorObj, setErrorObj] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setError('Image must be less than 5MB');
+        setErrorObj({ title: 'Validation Error', message: 'Image must be less than 5MB' });
         return;
       }
       setSelectedFile(file);
@@ -25,7 +27,7 @@ const ProfilePage = () => {
         setAvatarPreview(reader.result);
       };
       reader.readAsDataURL(file);
-      setError('');
+      setErrorObj(null);
     }
   };
 
@@ -33,7 +35,7 @@ const ProfilePage = () => {
     e.preventDefault();
     setIsLoading(true);
     setMessage('');
-    setError('');
+    setErrorObj(null);
 
     const formData = new FormData();
     if (name) formData.append('name', name);
@@ -51,7 +53,7 @@ const ProfilePage = () => {
         updateUser(response.data.data);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update profile');
+      setErrorObj(normalizeApiError(err));
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +128,7 @@ const ProfilePage = () => {
 
             {/* Messages */}
             {message && <div className="text-[#22c55e] text-[13px] font-medium bg-[#22c55e]/10 p-3 rounded-lg border border-[#22c55e]/20">{message}</div>}
-            {error && <div className="text-error text-[13px] font-medium bg-error-container/40 p-3 rounded-lg border border-error/20">{error}</div>}
+            {errorObj && <ErrorAlert error={errorObj} />}
 
             {/* Submit */}
             <div className="flex justify-end pt-4 mt-2 border-t border-outline-variant/60">

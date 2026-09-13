@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../ui/Button';
+import ErrorAlert from '../ui/ErrorAlert';
+import { normalizeApiError } from '../../utils/errorHandler';
 import api from '../../services/api';
 
 const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
@@ -10,7 +12,7 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
   const [fat, setFat] = useState('');
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState('');
+  const [errorObj, setErrorObj] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
@@ -34,15 +36,15 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
     name.trim() && isValid(calories) && isValid(protein) && isValid(carbs) && isValid(fat);
 
   const handleSave = async () => {
-    if (!name.trim()) { setError('Food name is required'); return; }
-    if (!isValid(calories)) { setError('Valid calorie count is required'); return; }
-    if (!isValid(protein)) { setError('Protein is required'); return; }
-    if (!isValid(carbs)) { setError('Carbs are required'); return; }
-    if (!isValid(fat)) { setError('Fat is required'); return; }
+    if (!name.trim()) { setErrorObj({ title: 'Validation Error', message: 'Food name is required', retryable: true }); return; }
+    if (!isValid(calories)) { setErrorObj({ title: 'Validation Error', message: 'Valid calorie count is required', retryable: true }); return; }
+    if (!isValid(protein)) { setErrorObj({ title: 'Validation Error', message: 'Protein is required', retryable: true }); return; }
+    if (!isValid(carbs)) { setErrorObj({ title: 'Validation Error', message: 'Carbs are required', retryable: true }); return; }
+    if (!isValid(fat)) { setErrorObj({ title: 'Validation Error', message: 'Fat is required', retryable: true }); return; }
     
     try {
       setLoading(true);
-      setError('');
+      setErrorObj(null);
       const response = await api.put(`/meals/${meal.id}`, {
         name: name.trim(),
         calories: Number(calories),
@@ -53,10 +55,10 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
       if (response.data.success) {
         onSave(response.data.data);
       } else {
-        setError(response.data.message || 'Failed to update meal');
+        setErrorObj({ title: 'Update Failed', message: response.data.message || 'Failed to update meal', retryable: true, technicalDetails: JSON.stringify(response.data) });
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update meal');
+      setErrorObj(normalizeApiError(err));
     } finally {
       setLoading(false);
     }
@@ -69,7 +71,7 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
       await api.delete(`/meals/${meal.id}`);
       onDelete(meal.id);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to delete meal');
+      setErrorObj(normalizeApiError(err));
       setDeleting(false);
     }
   };
@@ -100,8 +102,8 @@ const EditMealModal = ({ meal, onClose, onSave, onDelete }) => {
 
         {/* Body */}
         <div className="p-6 overflow-y-auto flex flex-col gap-5">
-          {error && (
-            <div className="p-3 bg-error-container text-on-error-container rounded-xl text-sm font-medium">{error}</div>
+          {errorObj && (
+            <ErrorAlert error={errorObj} onRetry={() => setErrorObj(null)} />
           )}
 
           <div>

@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
 import Button from '../ui/Button';
+import Button from '../ui/Button';
+import ErrorAlert from '../ui/ErrorAlert';
+import { normalizeApiError } from '../../utils/errorHandler';
 import api from '../../services/api';
 
 const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
@@ -23,7 +26,7 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
   const [scannedImageUrl, setScannedImageUrl] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [errorObj, setErrorObj] = useState(null);
   const fileInputRef = useRef(null);
 
   if (!isOpen) return null;
@@ -31,7 +34,7 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
   const reset = () => {
     setName(''); setQuantity(''); setUnit('grams');
     setCalories(''); setProtein(''); setCarbs(''); setFat('');
-    setImage(null); setImagePreview(null); setScannedImageUrl(''); setError('');
+    setImage(null); setImagePreview(null); setScannedImageUrl(''); setErrorObj(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -40,10 +43,10 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { setError('Image must be smaller than 5MB'); return; }
+    if (file.size > 5 * 1024 * 1024) { setErrorObj({ title: 'File Too Large', message: 'Image must be smaller than 5MB', retryable: true }); return; }
     setImage(file);
     setImagePreview(URL.createObjectURL(file));
-    setError('');
+    setErrorObj(null);
   };
 
   const handleRemoveImage = () => {
@@ -55,7 +58,7 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
     if (!image) return;
     try {
       setIsScanning(true);
-      setError('');
+      setErrorObj(null);
       
       const formData = new FormData();
       formData.append('image', image);
@@ -73,11 +76,11 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
         if (data.fat !== undefined) setFat(data.fat);
         if (imageUrl) setScannedImageUrl(imageUrl);
       } else {
-        setError(response.data.message || 'AI failed to analyze the image');
+        setErrorObj({ title: 'AI Analysis Failed', message: response.data.message || 'AI failed to analyze the image', retryable: true, technicalDetails: JSON.stringify(response.data) });
       }
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || 'Failed to connect to AI service');
+      setErrorObj(normalizeApiError(err));
     } finally {
       setIsScanning(false);
     }
@@ -89,15 +92,15 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
     name.trim() && isValid(calories) && isValid(protein) && isValid(carbs) && isValid(fat);
 
   const handleSave = async () => {
-    if (!name.trim())       { setError('Food name is required'); return; }
-    if (!isValid(calories)) { setError('Calories is required'); return; }
-    if (!isValid(protein))  { setError('Protein (g) is required'); return; }
-    if (!isValid(carbs))    { setError('Carbs (g) is required'); return; }
-    if (!isValid(fat))      { setError('Fat (g) is required'); return; }
+    if (!name.trim())       { setErrorObj({ title: 'Validation Error', message: 'Food name is required', retryable: true }); return; }
+    if (!isValid(calories)) { setErrorObj({ title: 'Validation Error', message: 'Calories is required', retryable: true }); return; }
+    if (!isValid(protein))  { setErrorObj({ title: 'Validation Error', message: 'Protein (g) is required', retryable: true }); return; }
+    if (!isValid(carbs))    { setErrorObj({ title: 'Validation Error', message: 'Carbs (g) is required', retryable: true }); return; }
+    if (!isValid(fat))      { setErrorObj({ title: 'Validation Error', message: 'Fat (g) is required', retryable: true }); return; }
 
     try {
       setLoading(true);
-      setError('');
+      setErrorObj(null);
 
       const formData = new FormData();
       formData.append('name', name.trim());
@@ -124,10 +127,10 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
         reset();
         onSave(response.data.data);
       } else {
-        setError(response.data.message || 'Failed to save meal');
+        setErrorObj({ title: 'Save Failed', message: response.data.message || 'Failed to save meal', retryable: true, technicalDetails: JSON.stringify(response.data) });
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to save. Check your connection.');
+      setErrorObj(normalizeApiError(err));
     } finally {
       setLoading(false);
     }
@@ -164,11 +167,8 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
 
         {/* Body */}
         <div className="p-6 overflow-y-auto flex flex-col gap-4">
-          {error && (
-            <div className="flex items-center gap-2 p-3 bg-error-container text-on-error-container rounded-xl text-sm font-medium">
-              <span className="material-symbols-outlined text-[16px] flex-shrink-0">error</span>
-              {error}
-            </div>
+          {errorObj && (
+            <ErrorAlert error={errorObj} onRetry={() => setErrorObj(null)} />
           )}
 
           {/* Meal Type */}

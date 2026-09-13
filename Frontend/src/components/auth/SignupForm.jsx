@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../ui/Button';
+import ErrorAlert from '../ui/ErrorAlert';
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -10,15 +11,15 @@ const SignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errorObj, setErrorObj] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setErrorObj(null);
 
     if (password !== confirmPassword) {
-      return setError("Passwords don't match");
+      return setErrorObj({ title: 'Validation Error', message: "Passwords don't match", retryable: true });
     }
 
     setLoading(true);
@@ -28,7 +29,7 @@ const SignupForm = () => {
     if (result.success) {
       navigate('/dashboard');
     } else {
-      setError(result.message);
+      setErrorObj(result.error);
     }
   };
 
@@ -43,9 +44,9 @@ const SignupForm = () => {
         </p>
       </div>
 
-      {error && (
-        <div className="mb-4 p-3 bg-error-container text-on-error-container rounded-xl text-sm">
-          {error}
+      {errorObj && (
+        <div className="mb-4">
+          <ErrorAlert error={errorObj} />
         </div>
       )}
 

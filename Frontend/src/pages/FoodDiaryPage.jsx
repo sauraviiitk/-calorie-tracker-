@@ -3,6 +3,8 @@ import api from '../services/api';
 import MealLoggerModal from '../components/diary/MealLoggerModal';
 import EditMealModal from '../components/diary/EditMealModal';
 import PdfImportModal from '../components/diary/PdfImportModal';
+import ErrorState from '../components/ui/ErrorState';
+import { normalizeApiError } from '../utils/errorHandler';
 
 const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
 
@@ -174,6 +176,7 @@ const FoodDiaryPage = () => {
   const [meals, setMeals] = useState([]);
   const [goals, setGoals] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorObj, setErrorObj] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [defaultMealType, setDefaultMealType] = useState('Breakfast');
   const [editingMeal, setEditingMeal] = useState(null);
@@ -181,6 +184,7 @@ const FoodDiaryPage = () => {
 
   const fetchData = async () => {
     setLoading(true);
+    setErrorObj(null);
     try {
       const [mealsRes, goalsRes] = await Promise.all([
         api.get(`/meals?date=${date.toISOString()}`),
@@ -190,6 +194,7 @@ const FoodDiaryPage = () => {
       if (goalsRes.data.success) setGoals(goalsRes.data.data);
     } catch (err) {
       console.error('FoodDiary fetch error:', err);
+      setErrorObj(normalizeApiError(err));
     } finally {
       setLoading(false);
     }
@@ -269,8 +274,14 @@ const FoodDiaryPage = () => {
         </div>
       </div>
 
-      {/* Nutrition Summary */}
-      {loading ? (
+      {errorObj ? (
+        <div className="mt-8">
+          <ErrorState error={errorObj} onRetry={fetchData} />
+        </div>
+      ) : (
+        <>
+          {/* Nutrition Summary */}
+          {loading ? (
         <div className="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/60 animate-pulse h-[200px]" />
       ) : (
         <NutritionSummary meals={meals} goals={goals} />
@@ -294,6 +305,8 @@ const FoodDiaryPage = () => {
           ))
         )}
       </div>
+        </>
+      )}
 
       {/* Add Food Modal */}
       <MealLoggerModal

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import api from '../services/api';
+import { normalizeApiError } from '../utils/errorHandler';
 
 const AuthContext = createContext();
 
@@ -38,9 +39,9 @@ export const AuthProvider = ({ children }) => {
         setUser({ id, name, email: userEmail, avatarUrl });
         return { success: true };
       }
-      return { success: false, message: response.data.message || 'Login failed' };
-    } catch (error) {
-      return { success: false, message: error.response?.data?.message || 'Login failed' };
+      return { success: false, error: { title: 'Login failed', message: response.data.message || 'Please check your credentials.' } };
+    } catch (err) {
+      return { success: false, error: normalizeApiError(err) };
     }
   };
 
@@ -55,9 +56,9 @@ export const AuthProvider = ({ children }) => {
         setUser({ id, name, email: userEmail, avatarUrl });
         return { success: true };
       }
-      return { success: false, message: response.data.message || 'Registration failed' };
-    } catch (error) {
-      return { success: false, message: error.response?.data?.message || 'Registration failed' };
+      return { success: false, error: { title: 'Registration failed', message: response.data.message || 'Please check your information.' } };
+    } catch (err) {
+      return { success: false, error: normalizeApiError(err) };
     }
   };
 

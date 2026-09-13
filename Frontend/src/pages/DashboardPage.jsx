@@ -7,11 +7,14 @@ import WeightGoalCard from '../components/dashboard/WeightGoalCard';
 import WeeklyChart from '../components/dashboard/WeeklyChart';
 import MealLoggerModal from '../components/diary/MealLoggerModal';
 import api from '../services/api';
+import ErrorState from '../components/ui/ErrorState';
+import { normalizeApiError } from '../utils/errorHandler';
 
 const DashboardPage = () => {
   const [goals, setGoals] = useState(null);
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const getLocalDateString = (d) => {
@@ -27,6 +30,7 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setError(null);
       try {
         const [goalsRes, mealsRes] = await Promise.all([
           api.get(`/goals?date=${date}`),
@@ -34,8 +38,9 @@ const DashboardPage = () => {
         ]);
         if (goalsRes.data.success) setGoals(goalsRes.data.data);
         if (mealsRes.data.success) setMeals(mealsRes.data.data);
-      } catch (error) {
-        console.error("Dashboard fetch error:", error);
+      } catch (err) {
+        console.error("Dashboard fetch error:", err);
+        setError(normalizeApiError(err));
       } finally {
         setLoading(false);
       }
@@ -67,6 +72,14 @@ const DashboardPage = () => {
   const totalProtein = meals.reduce((sum, meal) => sum + (meal.protein || 0), 0);
   const totalCarbs = meals.reduce((sum, meal) => sum + (meal.carbs || 0), 0);
   const totalFat = meals.reduce((sum, meal) => sum + (meal.fat || 0), 0);
+
+  if (error && !meals.length && !goals) {
+    return (
+      <div className="flex-1 w-full h-full min-h-[50vh] flex items-center justify-center">
+        <ErrorState error={error} onRetry={() => window.dispatchEvent(new Event('appDataChanged'))} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8 w-full relative">

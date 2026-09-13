@@ -3,18 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
+import ErrorAlert from '../ui/ErrorAlert';
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errorObj, setErrorObj] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setErrorObj(null);
     setLoading(true);
     
     const result = await login(email, password);
@@ -23,7 +24,7 @@ const LoginForm = () => {
     if (result.success) {
       navigate('/dashboard');
     } else {
-      setError(result.message);
+      setErrorObj(result.error);
     }
   };
 
@@ -38,9 +39,9 @@ const LoginForm = () => {
         </p>
       </div>
 
-      {error && (
-        <div className="mb-4 p-3 bg-error-container text-on-error-container rounded-xl text-sm">
-          {error}
+      {errorObj && (
+        <div className="mb-4">
+          <ErrorAlert error={errorObj} />
         </div>
       )}
 

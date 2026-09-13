@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import ErrorState from '../components/ui/ErrorState';
+import { normalizeApiError } from '../utils/errorHandler';
 
 import NutritionSummaryMetrics from '../components/reports/NutritionSummaryMetrics';
 import WeeklyCalorieChart from '../components/reports/WeeklyCalorieChart';
@@ -17,7 +19,7 @@ const ReportsPage = () => {
   const [goals, setGoals] = useState(null);
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [errorObj, setErrorObj] = useState(null);
 
   // Derived state for the charts
   const [summaryData, setSummaryData] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
@@ -43,7 +45,7 @@ const ReportsPage = () => {
     }
 
     setLoading(true);
-    setError('');
+    setErrorObj(null);
 
     try {
       let startDateIso, endDateIso;
@@ -112,7 +114,7 @@ const ReportsPage = () => {
 
     } catch (err) {
       console.error('Error fetching reports:', err);
-      setError('Nutrition reports couldn\'t be loaded.');
+      setErrorObj(normalizeApiError(err));
     } finally {
       setLoading(false);
     }
@@ -281,14 +283,9 @@ const ReportsPage = () => {
         </div>
       </div>
 
-      {error ? (
-        <div className="flex flex-col items-center justify-center p-12 bg-error-container text-on-error-container rounded-3xl">
-          <span className="material-symbols-outlined text-[48px] mb-4">error</span>
-          <h3 className="font-title-lg font-bold mb-2">Nutrition reports couldn't be loaded.</h3>
-          <p className="text-[14px] opacity-80 mb-6">{error}</p>
-          <button onClick={fetchReportData} className="px-6 py-2.5 bg-error text-on-error rounded-xl font-semibold text-[14px] hover:bg-error/90 transition-colors">
-            Try Again
-          </button>
+      {errorObj ? (
+        <div className="mt-8">
+          <ErrorState error={errorObj} onRetry={fetchReportData} />
         </div>
       ) : loading ? (
         <div className="flex flex-col items-center justify-center py-20 text-on-surface-variant">

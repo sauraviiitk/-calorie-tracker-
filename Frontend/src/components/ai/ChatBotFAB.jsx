@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { normalizeApiError } from '../../utils/errorHandler';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -145,9 +146,10 @@ const ChatBotFAB = () => {
       if (error.name === 'AbortError') return; // User cancelled, don't show error
 
       console.error('Chat error:', error);
+      const normalized = normalizeApiError(error);
       setMessages(prev => prev.map(m =>
         m.id === botMsgId
-          ? { ...m, text: '⚠️ Sorry, I couldn\'t connect to the AI. Please check the server and try again.', streaming: false }
+          ? { ...m, text: `⚠️ **${normalized.title}**\n\n${normalized.message}`, streaming: false }
           : m
       ));
     } finally {
