@@ -82,17 +82,17 @@ const NutritionSummary = ({ meals, goals }) => {
       {/* Macros */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {[
-          { label: 'Protein', val: total.protein, target: goals?.targetProtein || 150, color: 'text-[#7e57c2]', bg: 'bg-[#ede7f6]' },
-          { label: 'Carbs',   val: total.carbs,   target: goals?.targetCarbs   || 200, color: 'text-[#22c55e]', bg: 'bg-[#e8f5e9]' },
-          { label: 'Fat',     val: total.fat,      target: goals?.targetFat    ||  65, color: 'text-[#f59e0b]', bg: 'bg-[#fff8e1]' },
-        ].map(({ label, val, target, color, bg }) => (
+          { label: 'Protein', val: total.protein, target: goals?.targetProtein || 150, color: 'text-[#7e57c2]', bg: 'bg-[#ede7f6]', fg: 'bg-[#7e57c2]' },
+          { label: 'Carbs',   val: total.carbs,   target: goals?.targetCarbs   || 200, color: 'text-[#22c55e]', bg: 'bg-[#e8f5e9]', fg: 'bg-[#22c55e]' },
+          { label: 'Fat',     val: total.fat,     target: goals?.targetFat     ||  65, color: 'text-[#f59e0b]', bg: 'bg-[#fff8e1]', fg: 'bg-[#f59e0b]' },
+        ].map(({ label, val, target, color, bg, fg }) => (
           <div key={label} className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span className={`font-label-sm text-[13px] font-semibold ${color}`}>{label}</span>
               <span className="font-label-sm text-[13px] text-on-surface-variant font-medium text-right">{Math.round(val)}g / {target}g</span>
             </div>
             <div className={`w-full h-1.5 rounded-full ${bg} overflow-hidden`}>
-              <div className={`h-1.5 rounded-full ${color.replace('text-', 'bg-')} transition-all`} style={{ width: `${Math.min((val / target) * 100, 100)}%` }} />
+              <div className={`h-1.5 rounded-full ${fg} transition-all`} style={{ width: `${Math.min((val / target) * 100, 100)}%` }} />
             </div>
           </div>
         ))}
