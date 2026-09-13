@@ -42,11 +42,7 @@ const ProfilePage = () => {
     if (selectedFile) formData.append('avatar', selectedFile);
 
     try {
-      const response = await api.put('/users/profile', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await api.put('/users/profile', formData);
 
       if (response.data.success) {
         setMessage('Profile updated successfully!');

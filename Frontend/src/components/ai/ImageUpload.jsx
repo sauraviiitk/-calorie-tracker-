@@ -85,9 +85,7 @@ const ImageUpload = () => {
       formData.append('image', file);
 
       // Upload image — API now returns { jobId, status: "PENDING" }
-      const response = await api.post('/ai/analyze-food', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const response = await api.post('/ai/analyze-food', formData);
 
       if (response.data.success) {
         const { jobId: id, status, result: immediateResult } = response.data;

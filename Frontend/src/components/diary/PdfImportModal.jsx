@@ -113,9 +113,7 @@ const PdfImportModal = ({ isOpen, onClose, onImported }) => {
     formData.append('pdf', selectedFile);
 
     try {
-      const response = await api.post('/diary/import-pdf', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const response = await api.post('/diary/import-pdf', formData);
 
       if (response.data.success) {
         const { jobId: id, status, result: immediateResult } = response.data;

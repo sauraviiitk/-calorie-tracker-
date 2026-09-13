@@ -63,9 +63,7 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
       const formData = new FormData();
       formData.append('image', image);
       
-      const response = await api.post('/ai/analyze-food', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const response = await api.post('/ai/analyze-food', formData);
 
       if (response.data.success) {
         const { data, imageUrl } = response.data;
@@ -125,9 +123,7 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
         formData.append('imageUrl', scannedImageUrl);
       }
 
-      const response = await api.post('/meals', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const response = await api.post('/meals', formData);
 
       if (response.data.success) {
         reset();
