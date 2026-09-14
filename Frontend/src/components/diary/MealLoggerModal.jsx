@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Button from '../ui/Button';
 import ErrorAlert from '../ui/ErrorAlert';
 import { normalizeApiError } from '../../utils/errorHandler';
@@ -28,6 +28,13 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
   const [loading, setLoading] = useState(false);
   const [errorObj, setErrorObj] = useState(null);
   const fileInputRef = useRef(null);
+  const pollTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (pollTimerRef.current) clearTimeout(pollTimerRef.current);
+    };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -35,6 +42,8 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
     setName(''); setQuantity(''); setUnit('grams');
     setCalories(''); setProtein(''); setCarbs(''); setFat('');
     setImage(null); setImagePreview(null); setScannedImageUrl(''); setErrorObj(null);
+    if (pollTimerRef.current) clearTimeout(pollTimerRef.current);
+    setIsScanning(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -54,6 +63,39 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const pollJobStatus = (id) => {
+    if (pollTimerRef.current) clearTimeout(pollTimerRef.current);
+
+    pollTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await api.get(`/ai/analyze-food/${id}/status`);
+        const { status, result: jobResult, error: jobError } = res.data;
+
+        if (status === 'COMPLETED') {
+          if (jobResult) {
+            if (jobResult.name) setName(jobResult.name);
+            if (jobResult.calories !== undefined) setCalories(jobResult.calories);
+            if (jobResult.protein !== undefined) setProtein(jobResult.protein);
+            if (jobResult.carbs !== undefined) setCarbs(jobResult.carbs);
+            if (jobResult.fat !== undefined) setFat(jobResult.fat);
+          }
+          setIsScanning(false);
+        } else if (status === 'FAILED') {
+          const error = typeof jobError === 'string' && jobError.trim().startsWith('{')
+             ? normalizeApiError({ response: { data: jobError } }) 
+             : { title: 'Analysis Failed', message: jobError || 'AI analysis failed. Please try again.', retryable: true, technicalDetails: jobError };
+          setErrorObj(error);
+          setIsScanning(false);
+        } else {
+          pollJobStatus(id);
+        }
+      } catch (err) {
+        setErrorObj(normalizeApiError(err));
+        setIsScanning(false);
+      }
+    }, 2000);
+  };
+
   const handleAiScan = async () => {
     if (!image) return;
     try {
@@ -66,20 +108,26 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
       const response = await api.post('/ai/analyze-food', formData);
 
       if (response.data.success) {
-        const { data, imageUrl } = response.data;
-        if (data.name) setName(data.name);
-        if (data.calories !== undefined) setCalories(data.calories);
-        if (data.protein !== undefined) setProtein(data.protein);
-        if (data.carbs !== undefined) setCarbs(data.carbs);
-        if (data.fat !== undefined) setFat(data.fat);
-        if (imageUrl) setScannedImageUrl(imageUrl);
+        const { jobId, status, result: immediateResult } = response.data;
+        if (status === 'COMPLETED' && immediateResult) {
+          if (immediateResult.name) setName(immediateResult.name);
+          if (immediateResult.calories !== undefined) setCalories(immediateResult.calories);
+          if (immediateResult.protein !== undefined) setProtein(immediateResult.protein);
+          if (immediateResult.carbs !== undefined) setCarbs(immediateResult.carbs);
+          if (immediateResult.fat !== undefined) setFat(immediateResult.fat);
+          setIsScanning(false);
+        } else if (jobId) {
+          pollJobStatus(jobId);
+        } else {
+          setIsScanning(false);
+        }
       } else {
         setErrorObj({ title: 'AI Analysis Failed', message: response.data.message || 'AI failed to analyze the image', retryable: true, technicalDetails: JSON.stringify(response.data) });
+        setIsScanning(false);
       }
     } catch (err) {
       console.error(err);
       setErrorObj(normalizeApiError(err));
-    } finally {
       setIsScanning(false);
     }
   };
