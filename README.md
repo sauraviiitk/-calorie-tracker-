@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![CalorieMate Banner](https://via.placeholder.com/1200x320.png?text=CalorieMate+-+AI-Powered+Nutritional+Intelligence)
+![CalorieMate Banner](https://placehold.co/1200x320/222222/FFFFFF/png?text=CalorieMate+-+AI-Powered+Nutritional+Intelligence)
 
 **Production-grade, AI-driven personal nutrition and calorie tracking platform featuring agentic conversational intelligence, multi-modal ingestion, asynchronous task orchestration, and client-side vector reporting.**
 
@@ -63,7 +63,7 @@ Experience CalorieMate in action—from conversational AI meal logging to instan
 
 <div align="center">
 
-[![CalorieMate Video Walkthrough](https://via.placeholder.com/1200x600.png?text=▶+Click+to+Watch+CalorieMate+Full+Demo)](https://drive.google.com/file/d/1VJ21FlwP-XRjEfy_Whe7630Fx6m_H4mM/view?usp=sharing)
+[![CalorieMate Video Walkthrough](https://placehold.co/1200x600/222222/FFFFFF/png?text=▶+Click+to+Watch+CalorieMate+Full+Demo)](https://drive.google.com/file/d/1VJ21FlwP-XRjEfy_Whe7630Fx6m_H4mM/view?usp=sharing)
 
 *Click the banner above to watch the comprehensive walkthrough of CalorieMate.*
 
