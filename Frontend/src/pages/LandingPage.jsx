@@ -463,7 +463,7 @@ const LandingPage = () => {
                 </div>
                 <button className="w-full sm:w-auto h-11 px-5 rounded-full bg-secondary-container text-primary font-title-md text-title-md flex items-center justify-center gap-2 hover:bg-secondary-fixed-dim transition-colors shadow-sm">
                   <span className="material-symbols-outlined text-[18px]">add</span>
-                  <span>+ Add Food</span>
+                  <span>Add Food</span>
                 </button>
               </div>
 
