@@ -17,6 +17,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [defaultMealType, setDefaultMealType] = useState('Breakfast');
   
 
   const [date, setDate] = useState(getLocalDateString(new Date()));
@@ -65,6 +66,21 @@ const DashboardPage = () => {
     };
   }, [date, mealType]);
 
+  const handleOpenAddModal = (type) => {
+    if (!isEditable) return;
+    if (typeof type === 'string' && type) {
+      setDefaultMealType(type);
+    } else {
+      const hour = new Date().getHours();
+      let guess = 'Snacks';
+      if (hour >= 5 && hour < 11) guess = 'Breakfast';
+      else if (hour >= 11 && hour < 16) guess = 'Lunch';
+      else if (hour >= 17 && hour < 23) guess = 'Dinner';
+      setDefaultMealType(guess);
+    }
+    setIsModalOpen(true);
+  };
+
   const handleMealAdded = (newMeal) => {
     setMeals(prev => [newMeal, ...prev]);
   };
@@ -94,7 +110,7 @@ const DashboardPage = () => {
 
   return (
     <div className="flex flex-col gap-8 w-full relative">
-      <WelcomeBanner onAddMeal={() => isEditable && setIsModalOpen(true)} isEditable={isEditable} />
+      <WelcomeBanner onAddMeal={handleOpenAddModal} isEditable={isEditable} />
       
       {/* Filters Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/40 shadow-sm">
@@ -143,7 +159,7 @@ const DashboardPage = () => {
             meals={meals}
             loading={loading}
             isEditable={isEditable}
-            onAddMeal={() => isEditable && setIsModalOpen(true)}
+            onAddMeal={handleOpenAddModal}
             onMealUpdated={handleMealUpdated}
             onMealDeleted={handleMealDeleted}
           />
@@ -162,6 +178,7 @@ const DashboardPage = () => {
           setIsModalOpen(false);
           handleMealAdded(newMeal);
         }}
+        defaultMealType={defaultMealType}
       />
     </div>
   );

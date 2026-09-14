@@ -36,6 +36,12 @@ const MealLoggerModal = ({ isOpen, onClose, onSave, selectedDate, defaultMealTyp
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      setMealType(defaultMealType || 'Breakfast');
+    }
+  }, [isOpen, defaultMealType]);
+
   if (!isOpen) return null;
 
   const reset = () => {
