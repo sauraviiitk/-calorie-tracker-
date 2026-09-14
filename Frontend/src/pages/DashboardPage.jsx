@@ -111,8 +111,8 @@ const DashboardPage = () => {
               <option value="All">All Meals</option>
               <option value="Breakfast">Breakfast</option>
               <option value="Lunch">Lunch</option>
-              <option value="Dinner">Dinner</option>
               <option value="Snacks">Snacks</option>
+              <option value="Dinner">Dinner</option>
             </select>
             <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
           </div>

@@ -7,7 +7,7 @@ import ErrorState from '../components/ui/ErrorState';
 import { normalizeApiError } from '../utils/errorHandler';
 import { isEditableDate, getLocalDateString } from '../utils/dateUtils';
 
-const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
+const MEAL_TYPES = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
 
 const MEAL_ICONS = {
   Breakfast: { icon: 'wb_sunny', color: 'bg-[#fff8e1] text-[#f59e0b]' },

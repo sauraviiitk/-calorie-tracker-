@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 const ErrorState = ({ error, onRetry }) => {
-  const [showDetails, setShowDetails] = useState(false);
-
   if (!error) return null;
 
   const { title, message, severity, retryable, technicalDetails } = error;
@@ -44,27 +42,6 @@ const ErrorState = ({ error, onRetry }) => {
         </button>
       )}
 
-      {technicalDetails && (
-        <div className="w-full text-left mt-4 border-t border-outline-variant/30 pt-4">
-          <button 
-            onClick={() => setShowDetails(!showDetails)}
-            className="text-xs flex items-center justify-center gap-1 w-full text-on-surface-variant hover:text-on-surface transition-colors"
-          >
-            <span className="material-symbols-outlined text-[16px]">
-              {showDetails ? 'expand_less' : 'expand_more'}
-            </span>
-            {showDetails ? 'Hide' : 'Show'} Technical Details
-          </button>
-          
-          {showDetails && (
-            <div className="mt-3 p-3 bg-surface-container-high rounded-xl border border-outline-variant/30 overflow-x-auto">
-              <pre className="text-[10px] leading-relaxed text-on-surface-variant whitespace-pre-wrap break-words max-h-48 overflow-y-auto">
-                {technicalDetails}
-              </pre>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };

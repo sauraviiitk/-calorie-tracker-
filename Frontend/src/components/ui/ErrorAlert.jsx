@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 const ErrorAlert = ({ error, onRetry }) => {
-  const [showDetails, setShowDetails] = useState(false);
-
   if (!error) return null;
 
   const { title, message, severity, retryable, technicalDetails } = error;
@@ -54,27 +52,6 @@ const ErrorAlert = ({ error, onRetry }) => {
             </button>
           )}
 
-          {technicalDetails && (
-            <div className="mt-3">
-              <button 
-                onClick={() => setShowDetails(!showDetails)}
-                className={`text-xs flex items-center gap-1 opacity-70 hover:opacity-100 transition-opacity ${textColors[severity || 'error']}`}
-              >
-                <span className="material-symbols-outlined text-[14px]">
-                  {showDetails ? 'expand_less' : 'expand_more'}
-                </span>
-                Technical Details
-              </button>
-              
-              {showDetails && (
-                <div className="mt-2 p-3 bg-black/5 rounded-lg overflow-x-auto">
-                  <pre className={`text-[10px] leading-relaxed ${textColors[severity || 'error']} opacity-80 whitespace-pre-wrap break-words max-h-32 overflow-y-auto`}>
-                    {technicalDetails}
-                  </pre>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>

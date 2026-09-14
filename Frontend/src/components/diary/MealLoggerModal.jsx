@@ -5,7 +5,7 @@ import { normalizeApiError } from '../../utils/errorHandler';
 import { isEditableDate, getLocalDateString } from '../../utils/dateUtils';
 import api from '../../services/api';
 
-const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
+const MEAL_TYPES = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
 const UNITS = ['grams', 'kg', 'ml', 'L', 'piece', 'serving', 'cup', 'bowl', 'slice', 'tablespoon', 'teaspoon'];
 
 const selectClass = "w-full h-[46px] px-4 bg-surface-container-lowest border border-outline-variant/60 rounded-xl text-[14px] text-on-surface transition-all focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer";
