@@ -33,7 +33,7 @@
 - [Database Schema & Relational Design](#-database-schema--relational-design)
 - [API Reference](#-api-reference)
 - [Frontend Architecture](#-frontend-architecture)
-- [Local Development & Deployment](#-local-development--deployment)
+- [Local Setup & Run Guide](#-local-setup--run-guide)
 - [Troubleshooting & FAQ](#-troubleshooting--faq)
 
 ---
@@ -544,96 +544,248 @@ Frontend/src/
 
 ---
 
-## 🛠 Local Development & Deployment
+## 🛠 Local Setup & Run Guide
 
-### Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **PostgreSQL**: v14 or higher
-- **Redis Server**: v6 or higher
-- **Google Gemini API Key**: [Google AI Studio](https://aistudio.google.com/)
+Follow these clear, step-by-step instructions to set up, configure, and run **CalorieMate** on your local machine.
 
-### 1. Clone & Install Dependencies
+---
+
+### 📋 Prerequisites
+
+Ensure you have the following installed on your system:
+
+| Prerequisite | Minimum Version | Purpose | Download / Source |
+| :--- | :--- | :--- | :--- |
+| **Node.js** | v18.0.0+ | JavaScript runtime for Backend & Frontend | [nodejs.org](https://nodejs.org/) |
+| **npm** | v9.0.0+ | Package manager (bundled with Node.js) | — |
+| **PostgreSQL** | v14.0+ | Relational database | [postgresql.org](https://www.postgresql.org/download/) or free cloud [Supabase](https://supabase.com/) / [Neon](https://neon.tech/) |
+| **Redis Server** | v6.2+ | Queue broker for BullMQ & cache | [redis.io](https://redis.io/download/) or free cloud [Upstash](https://upstash.com/) |
+| **Google Gemini API Key** | — | Multimodal AI vision, chat & PDF parsing | Free at [Google AI Studio](https://aistudio.google.com/) |
+
+---
+
+### 1️⃣ Step 1: Clone the Repository
+
+Clone the project to your computer and navigate into the project directory:
+
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/calorie-mate.git
-cd calorie-mate
+git clone https://github.com/your-username/personal-calorie-tracker.git
+cd personal-calorie-tracker
+```
 
-# Install Backend dependencies
+The repository structure contains:
+- **`Backend/`**: Node.js & Express API, Prisma ORM, BullMQ background workers.
+- **`Frontend/`**: React 19 Single Page App built with Vite and Tailwind CSS.
+
+---
+
+### 2️⃣ Step 2: Backend Setup & Configuration
+
+#### A. Install Backend Dependencies
+Open your terminal, navigate into the `Backend` directory, and install the dependencies:
+
+```bash
 cd Backend
-npm install
-
-# Install Frontend dependencies
-cd ../Frontend
 npm install
 ```
 
-### 2. Environment Variables Setup
+#### B. Create the Backend `.env` File
+In the `Backend` folder, create a new file named `.env`:
 
-#### Backend (`Backend/.env`)
+```bash
+# On Linux / macOS:
+touch .env
+
+# On Windows (PowerShell):
+New-Item .env -ItemType File
+```
+
+Paste the following configuration into `Backend/.env`:
+
 ```env
+# Server Port & Environment
 PORT=5000
 NODE_ENV=development
-DATABASE_URL="postgresql://username:password@localhost:5432/caloriemate?schema=public"
-JWT_SECRET="your-super-secure-random-jwt-secret-key"
-GEMINI_API_KEY="AIzaSyYourGeminiApiKeyHere"
+
+# Authentication Secret (any random secure string)
+JWT_SECRET=your_super_secret_jwt_key_here
+
+# Google Gemini API Key (Required for AI Chatbot, Food Scanner & PDF Parser)
+# Get a free key at: https://aistudio.google.com/
+GEMINI_API_KEY=AIzaSyYourGeminiApiKeyHere
+
+# PostgreSQL Database Connection String (Prisma ORM)
+# If using a local PostgreSQL database:
+DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/caloriemate?schema=public"
+
+# If using a cloud database (Supabase / Neon):
+# DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres"
+
+# Redis Connection URL (Required for BullMQ queue processing & caching)
+# If using a local Redis server:
 REDIS_URL="redis://127.0.0.1:6379"
 
-# Optional Cloudinary Configuration for remote media
-CLOUDINARY_CLOUD_NAME=""
-CLOUDINARY_API_KEY=""
-CLOUDINARY_API_SECRET=""
+# If using cloud Redis (Upstash):
+# REDIS_URL="redis://default:[password]@[host]:[port]"
+
+# Cloudinary Credentials (Optional - used for profile avatar uploads)
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_cloudinary_key
+CLOUDINARY_API_SECRET=your_cloudinary_secret
 ```
 
-#### Frontend (`Frontend/.env`)
-```env
-VITE_API_URL="http://localhost:5000/api"
-```
+> [!NOTE]
+> Make sure your PostgreSQL server and Redis server are running before continuing. If your PostgreSQL password contains special characters (e.g. `@`, `:`, `/`), URL-encode them (for example, `@` becomes `%40`).
 
-### 3. Database Migration
+#### C. Initialize Database with Prisma
+Run Prisma to create all required database tables and generate the Prisma Client:
+
 ```bash
-cd Backend
-npx prisma migrate dev --name init
+# Push the schema and create tables in your database:
+npx prisma db push
+
+# Generate the type-safe Prisma client:
 npx prisma generate
 ```
 
-### 4. Running the Application
-
-#### Development Mode:
+*(Optional)* To view and manage your database visually in your browser:
 ```bash
-# Terminal 1: Start Backend (with auto-reloading and integrated workers)
+npx prisma studio
+# Opens Prisma Studio at http://localhost:5555
+```
+
+---
+
+### 3️⃣ Step 3: Frontend Setup & Configuration
+
+#### A. Install Frontend Dependencies
+Open a **second terminal window**, navigate to the `Frontend` directory, and install dependencies:
+
+```bash
+cd Frontend
+npm install
+```
+
+#### B. Create the Frontend `.env` File
+In the `Frontend` folder, create a file named `.env`:
+
+```bash
+# On Linux / macOS:
+touch .env
+
+# On Windows (PowerShell):
+New-Item .env -ItemType File
+```
+
+Add the following variable to `Frontend/.env` so the frontend knows where the backend is running:
+
+```env
+# Backend API Base URL
+VITE_API_URL=http://localhost:5000/api
+```
+
+---
+
+### 4️⃣ Step 4: Running the Application
+
+You need both the Backend and Frontend running concurrently in separate terminal windows.
+
+#### Terminal 1: Start the Backend Server
+```bash
 cd Backend
 npm run dev
+```
 
-# Terminal 2: Start Frontend (Vite HMR)
+*Expected output in Terminal 1:*
+```
+[Server] Booting background workers for monolith deployment...
+[BullMQ] Food analysis worker started
+[BullMQ] PDF import worker started
+Server is running on port 5000
+[Redis] Cache client connected
+```
+
+#### Terminal 2: Start the Frontend Client
+```bash
 cd Frontend
 npm run dev
 ```
 
-#### Dedicated Worker Mode (Production Style):
+*Expected output in Terminal 2:*
+```
+  VITE v8.3.0  ready in 240 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+```
+
+---
+
+### 5️⃣ Step 5: Verification & Testing Checklist
+
+Open your browser at **`http://localhost:5173`** and verify the app:
+
+1. **User Sign Up / Login**:
+   - Go to `/signup`, register a new user with email and password.
+   - You will be automatically redirected to the dashboard.
+2. **Log Meals**:
+   - Go to the **Food Diary** page (`/diary`).
+   - Click **"Log Meal"**, enter a meal name, select meal type (e.g. Breakfast), quantity, and calories. Confirm it appears in your daily list.
+3. **AI Nutritionist Assistant**:
+   - Click the floating green robot button in the bottom-right corner.
+   - Ask: *"What did I eat today?"* — the AI will stream a response with your logged food.
+   - Tell the AI: *"Log 2 scrambled eggs for breakfast"* — the agent will autonomously add the meal to your diary.
+4. **AI Food Vision Scanner**:
+   - Go to **Scanner** (`/scanner`) and upload a photo of food.
+   - The photo is queued via BullMQ and analyzed by Google Gemini to extract nutrition macros.
+5. **Reports & PDF Export**:
+   - Go to **Reports** (`/reports`) and click **"Export PDF Report"** to download a clean, multi-page vector PDF report of your nutrition.
+
+---
+
+### 6️⃣ Step 6: Production Build (Optional)
+
+To test the optimized production build of the frontend:
+
 ```bash
-# Start API server
-cd Backend
-npm start
-
-# Run Food Analysis Worker in separate process
-npm run worker
-
-# Run PDF Import Worker in separate process
-npm run worker:pdf
+cd Frontend
+npm run build
+npm run preview
 ```
 
 ---
 
 ## ❓ Troubleshooting & FAQ
 
-#### 1. Why do I see `503 Service Unavailable` on Image or PDF uploads?
-BullMQ requires an active Redis instance. Ensure Redis is running on the address specified in `REDIS_URL` (`redis://127.0.0.1:6379`). You can test your Redis connection via `redis-cli ping` (should reply `PONG`).
+#### 1. Why do I see `PrismaClientInitializationError: Can't reach database server`?
+- Ensure your PostgreSQL service is running.
+- Verify the connection parameters in `Backend/.env` (`DATABASE_URL`).
+- Confirm the host, port (`5432`), database name, username, and password are correct.
 
-#### 2. Why can't I edit a meal from yesterday?
-CalorieMate enforces a strict **"Today Only" Mutation Rule**. Historical entries are permanently locked to preserve record accuracy. Only meals logged for the current calendar date can be edited or deleted.
+#### 2. Why do I see `503 Service Unavailable` or `[Redis] Cache client error` on uploads?
+- BullMQ and caching require an active Redis instance.
+- Ensure your local Redis server or cloud Redis instance (e.g. Upstash) is running and reachable via the address in `REDIS_URL` (`redis://127.0.0.1:6379`).
+- You can test your Redis connection in a terminal:
+  ```bash
+  redis-cli ping
+  # Should output: PONG
+  ```
 
-#### 3. How does file deduplication work?
-When uploading an image or PDF, the backend computes an instantaneous SHA-256 hash. If that exact file was previously processed for your account, CalorieMate instantly retrieves the existing result from PostgreSQL, avoiding duplicate Gemini API costs and execution latency.
+#### 3. Why does the AI Chatbot return `API key not valid`?
+- Check that you copied the correct Gemini API key from [Google AI Studio](https://aistudio.google.com/) into `Backend/.env` under `GEMINI_API_KEY`.
+- Avoid surrounding quotes or spaces in `.env`.
+- Restart the backend server (`npm run dev`) after modifying `.env`.
+
+#### 4. Why do frontend requests fail with `Network Error`?
+- Verify that the backend server is running on port 5000.
+- Verify that `Frontend/.env` has `VITE_API_URL=http://localhost:5000/api`.
+- Remember that Vite requires a server restart (`npm run dev`) after modifying `.env`.
+
+#### 5. Why can't I edit a meal from yesterday?
+- CalorieMate enforces a strict **"Today Only" Mutation Rule**. Historical entries are permanently locked to preserve data integrity. Only meals logged for today's date can be edited or deleted.
+
+#### 6. How does file deduplication work?
+- When uploading an image or PDF, the backend computes a cryptographic SHA-256 hash. If that exact file was previously processed for your account, CalorieMate instantly retrieves the existing result from PostgreSQL, avoiding duplicate Gemini API calls and latency.
 
 ---
 
