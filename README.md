@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![CalorieMate Banner](./assets/app_banner.jpg)
+
 
 **Production-grade, AI-driven personal nutrition and calorie tracking platform featuring agentic conversational intelligence, multi-modal ingestion, asynchronous task orchestration, and client-side vector reporting.**
 
