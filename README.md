@@ -48,74 +48,12 @@ CalorieMate reimagines dietary management by unifying modern full-stack web arch
 
 ### 🏗 High-Level System Architecture
 
-```mermaid
-flowchart TB
-    %% Client Layer
-    subgraph ClientLayer ["Client Layer (React 19 + Vite 8)"]
-        SPA["React SPA (Tailwind CSS)"]
-        ChatFAB["Agentic AI Assistant (SSE)"]
-        PDFGen["html2canvas + jsPDF Engine"]
-    end
 
-    %% API Gateway Layer
-    subgraph APILayer ["Backend API Gateway (Express 5.2 / Node.js)"]
-        Router["Express REST Router"]
-        AuthMid["Auth Middleware (JWT Verify)"]
-        ZodVal["Zod Schema Validation"]
-        
-        subgraph Controllers ["Controllers"]
-            AuthC["authController"]
-            MealC["mealController"]
-            GoalC["goalController"]
-            ReportC["reportController"]
-            AIC["aiController"]
-            PDFC["pdfImportController"]
-        end
-    end
+<div align="center">
 
-    %% Asynchronous Processing Layer
-    subgraph QueueLayer ["Asynchronous Queue & Cache (Redis + BullMQ)"]
-        RedisQ[("Redis Server (ioredis)")]
-        FoodQ["Queue: 'food-analysis'"]
-        DocQ["Queue: 'pdf-import'"]
-        
-        subgraph Workers ["BullMQ Workers (Monolith or Standalone)"]
-            FoodWorker["foodAnalysis.worker.js"]
-            DocWorker["pdfImport.worker.js"]
-        end
-    end
+![CalorieMate High-Level System Architecture](./assets/architecture.png)
 
-    %% External & Persistence Layer
-    subgraph PersistenceLayer ["Persistence & External Services"]
-        PrismaORM["Prisma Client ORM"]
-        Postgres[("PostgreSQL Database")]
-        GeminiAPI[["Google Gemini 3.8 Flash API"]]
-        CloudinaryCDN[["Cloudinary Media CDN (Optional)"]]
-    end
-
-    %% Interconnects
-    SPA -- "HTTP / REST (Axios Interceptors)" --> Router
-    ChatFAB -- "Server-Sent Events (SSE)" --> AIC
-    Router --> AuthMid --> ZodVal
-    ZodVal --> Controllers
-    
-    %% Synchronous Paths
-    AuthC & MealC & GoalC --> PrismaORM
-    ReportC <--> |"Cache Read/Write (TTL 1h)"| RedisQ
-    ReportC --> PrismaORM
-    PrismaORM <--> Postgres
-    
-    %% Async Job Pipeline
-    AIC -- "SHA-256 Hash & Enqueue" --> FoodQ
-    PDFC -- "SHA-256 Hash & Enqueue" --> DocQ
-    FoodQ & DocQ --> RedisQ
-    RedisQ --> FoodWorker & DocWorker
-    
-    %% Workers to Services
-    FoodWorker & DocWorker --> GeminiAPI
-    FoodWorker & DocWorker --> PrismaORM
-    MealC -- "Scan Invalidate Cache" --> RedisQ
-```
+</div>
 
 ---
 
