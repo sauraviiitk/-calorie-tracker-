@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![CalorieMate Banner](https://placehold.co/1200x320/222222/FFFFFF/png?text=CalorieMate+-+AI-Powered+Nutritional+Intelligence)
+![CalorieMate Banner](./assets/app_banner.jpg)
 
 **Production-grade, AI-driven personal nutrition and calorie tracking platform featuring agentic conversational intelligence, multi-modal ingestion, asynchronous task orchestration, and client-side vector reporting.**
 
@@ -61,13 +61,7 @@ CalorieMate reimagines dietary management by unifying modern full-stack web arch
 
 Experience CalorieMate in action—from conversational AI meal logging to instant photo vision analysis and vector PDF reporting:
 
-<div align="center">
-
-[![CalorieMate Video Walkthrough](./assets/video_thumbnail.jpg)](https://drive.google.com/file/d/1VJ21FlwP-XRjEfy_Whe7630Fx6m_H4mM/view?usp=sharing)
-
-*Click the banner above to watch the comprehensive walkthrough of CalorieMate.*
-
-</div>
+[Watch Demo Video](https://drive.google.com/file/d/1VJ21FlwP-XRjEfy_Whe7630Fx6m_H4mM/view?usp=sharing)
 
 ---
 
