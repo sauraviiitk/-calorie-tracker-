@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import api from '../services/api';
 import ErrorState from '../components/ui/ErrorState';
 import { normalizeApiError } from '../utils/errorHandler';
@@ -20,6 +22,7 @@ const ReportsPage = () => {
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorObj, setErrorObj] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Derived state for the charts
   const [summaryData, setSummaryData] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
@@ -224,6 +227,53 @@ const ReportsPage = () => {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    const reportElement = document.getElementById('report-content');
+    if (!reportElement) return;
+
+    setIsDownloading(true);
+    try {
+      const canvas = await html2canvas(reportElement, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      // Handle pages if it's too long
+      let heightLeft = pdfHeight;
+      let position = 0;
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(`Nutrition_Report_${dateRangeType}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 w-full relative pb-10">
       
@@ -280,6 +330,23 @@ const ReportsPage = () => {
             </select>
             <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
           </div>
+
+          <button
+            onClick={handleDownloadPDF}
+            disabled={isDownloading || meals.length === 0}
+            className={`h-[40px] px-4 rounded-xl text-[13px] font-semibold transition-all flex items-center gap-2 ${
+              isDownloading || meals.length === 0
+                ? 'bg-surface-variant/50 text-on-surface-variant/50 cursor-not-allowed'
+                : 'bg-primary text-on-primary hover:bg-primary/90 shadow-sm'
+            }`}
+          >
+            {isDownloading ? (
+              <div className="w-4 h-4 border-2 border-on-primary/30 border-t-on-primary rounded-full animate-spin"></div>
+            ) : (
+              <span className="material-symbols-outlined text-[18px]">download</span>
+            )}
+            {isDownloading ? 'Generating...' : 'Download PDF'}
+          </button>
         </div>
       </div>
 
@@ -301,7 +368,7 @@ const ReportsPage = () => {
           </p>
         </div>
       ) : (
-        <>
+        <div id="report-content" className="flex flex-col gap-8 bg-surface p-4 rounded-2xl -mx-4 sm:mx-0 sm:p-2">
           {/* 2. SUMMARY METRICS */}
           <NutritionSummaryMetrics {...summaryData} />
 
@@ -321,9 +388,7 @@ const ReportsPage = () => {
 
           {/* 6. FULL WIDTH: MICRONUTRIENT SUMMARY */}
           <MicronutrientSummary />
-
-
-        </>
+        </div>
       )}
     </div>
   );
