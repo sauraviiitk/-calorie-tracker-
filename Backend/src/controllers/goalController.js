@@ -1,5 +1,5 @@
 const prisma = require('../config/db');
-const { invalidateWeeklyReportCache } = require('../utils/cacheUtils');
+const { invalidateUserCaches } = require('../utils/cacheUtils');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
 const { getLocalDateString } = require('../utils/dateUtils');
@@ -34,8 +34,8 @@ exports.createOrUpdateGoal = asyncHandler(async (req, res, next) => {
       });
     }
 
-    // Invalidate this user's cached weekly reports — goal changes affect report targets
-    await invalidateWeeklyReportCache(userId);
+    // Invalidate this user's cached today, weekly, and analytics reports
+    await invalidateUserCaches(userId);
     res.status(200).json({ success: true, data: goal });
 });
 

@@ -1,12 +1,12 @@
 const prisma = require('../config/db');
-const { invalidateWeeklyReportCache } = require('../utils/cacheUtils');
+const { invalidateUserCaches } = require('../utils/cacheUtils');
 
 exports.addMeal = async (userId, data) => {
   const meal = await prisma.meal.create({
     data: { ...data, userId },
   });
-  // Invalidate this user's cached weekly reports — data has changed
-  await invalidateWeeklyReportCache(userId);
+  // Invalidate this user's cached today, weekly, and analytics reports
+  await invalidateUserCaches(userId);
   return meal;
 };
 
@@ -58,8 +58,8 @@ exports.updateMeal = async (userId, mealId, data) => {
   if (!existing) throw new Error('Meal not found or unauthorized');
 
   const updated = await prisma.meal.update({ where: { id }, data });
-  // Invalidate this user's cached weekly reports — data has changed
-  await invalidateWeeklyReportCache(userId);
+  // Invalidate this user's cached today, weekly, and analytics reports
+  await invalidateUserCaches(userId);
   return updated;
 };
 
@@ -70,7 +70,7 @@ exports.deleteMeal = async (userId, mealId) => {
   if (!existing) throw new Error('Meal not found or unauthorized');
 
   const deleted = await prisma.meal.delete({ where: { id } });
-  // Invalidate this user's cached weekly reports — data has changed
-  await invalidateWeeklyReportCache(userId);
+  // Invalidate this user's cached today, weekly, and analytics reports
+  await invalidateUserCaches(userId);
   return deleted;
 };

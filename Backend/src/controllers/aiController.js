@@ -7,6 +7,7 @@ const { getFoodAnalysisQueue } = require('../queues/foodAnalysis.queue');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
 const { formatAiError } = require('../utils/aiErrorHandler');
+const { cacheGet, weeklyReportKey } = require('../utils/cacheUtils');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -166,13 +167,34 @@ async function executeTool(name, args, userId) {
 
     if (name === 'getWeeklySummary') {
       const today = new Date();
+      const endStr = today.toISOString().split('T')[0];
       const sevenDaysAgo = new Date(today);
       sevenDaysAgo.setDate(today.getDate() - 6);
-      sevenDaysAgo.setHours(0, 0, 0, 0);
-      today.setHours(23, 59, 59, 999);
+      const startStr = sevenDaysAgo.toISOString().split('T')[0];
+
+      // Try Redis weekly report cache first
+      const cacheKey = weeklyReportKey(userId, startStr, endStr);
+      const cached = await cacheGet(cacheKey);
+      if (cached) {
+        return {
+          success: true,
+          cached: true,
+          daysTracked: cached.daysTracked,
+          avgDailyCalories: cached.avgDailyCalories,
+          avgDailyProtein: cached.avgDailyProtein,
+          avgDailyCarbs: cached.avgDailyCarbs,
+          avgDailyFat: cached.avgDailyFat,
+          dailyBreakdown: cached.dailyBreakdown
+        };
+      }
+
+      const sevenDaysAgoStart = new Date(sevenDaysAgo);
+      sevenDaysAgoStart.setHours(0, 0, 0, 0);
+      const todayEnd = new Date(today);
+      todayEnd.setHours(23, 59, 59, 999);
 
       const meals = await prisma.meal.findMany({
-        where: { userId, date: { gte: sevenDaysAgo, lte: today } },
+        where: { userId, date: { gte: sevenDaysAgoStart, lte: todayEnd } },
         orderBy: { date: 'asc' }
       });
 

@@ -96,25 +96,16 @@ const ReportsPage = () => {
         endDateIso = customEndDate.toISOString();
       }
 
-      const [goalsRes, mealsRes] = await Promise.all([
-        api.get(`/goals/range?startDate=${startDateLocal}&endDate=${endDateLocal}`),
-        api.get(`/meals?startDate=${startDateIso}&endDate=${endDateIso}&mealType=${mealTypeFilter}`)
-      ]);
+      const res = await api.get(`/reports/analytics?startDate=${startDateLocal}&endDate=${endDateLocal}&mealType=${mealTypeFilter}`);
 
-      let fetchedGoals = [];
-      if (goalsRes.data.success) {
-        fetchedGoals = goalsRes.data.data;
-        // set the default global goal for components that expect a single goal object
-        const defaultGoal = fetchedGoals.find(g => g.date === null) || fetchedGoals[0];
-        setGoals(defaultGoal);
+      if (res.data.success) {
+        const report = res.data.data;
+        setGoals(report.goals);
+        setMeals(report.meals || []);
+        setDailyData(report.dailyData || []);
+        setSummaryData(report.summaryData || { calories: 0, protein: 0, carbs: 0, fat: 0 });
+        setTodayMacros(report.todayMacros || { protein: 0, carbs: 0, fat: 0 });
       }
-      
-      if (mealsRes.data.success) {
-        const fetchedMeals = mealsRes.data.data;
-        setMeals(fetchedMeals);
-        processMealsData(fetchedMeals, fetchedGoals, startDateIso, endDateIso);
-      }
-
     } catch (err) {
       console.error('Error fetching reports:', err);
       setErrorObj(normalizeApiError(err));

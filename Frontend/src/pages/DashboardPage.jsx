@@ -33,12 +33,20 @@ const DashboardPage = () => {
         const endOfDay = new Date(date);
         endOfDay.setHours(23, 59, 59, 999);
 
-        const [goalsRes, mealsRes] = await Promise.all([
-          api.get(`/goals?date=${dateStr}`),
-          api.get(`/meals?startDate=${startOfDay.toISOString()}&endDate=${endOfDay.toISOString()}&mealType=${mealType}`)
-        ]);
-        if (goalsRes.data.success) setGoals(goalsRes.data.data);
-        if (mealsRes.data.success) setMeals(mealsRes.data.data);
+        if (mealType === 'All') {
+          const todayRes = await api.get(`/reports/today?date=${dateStr}`);
+          if (todayRes.data.success) {
+            setGoals(todayRes.data.data.goals);
+            setMeals(todayRes.data.data.meals || []);
+          }
+        } else {
+          const [goalsRes, mealsRes] = await Promise.all([
+            api.get(`/goals?date=${dateStr}`),
+            api.get(`/meals?startDate=${startOfDay.toISOString()}&endDate=${endOfDay.toISOString()}&mealType=${mealType}`)
+          ]);
+          if (goalsRes.data.success) setGoals(goalsRes.data.data);
+          if (mealsRes.data.success) setMeals(mealsRes.data.data);
+        }
       } catch (err) {
         console.error("Dashboard fetch error:", err);
         setError(normalizeApiError(err));

@@ -256,22 +256,24 @@ sequenceDiagram
     end
 ```
 
-### 📊 4. High-Performance Caching & Client-Side PDF Generation
-- **Non-Blocking Redis Cache**: Aggregated weekly and custom reports are cached in Redis (`TTL: 1 Hour`) under scoped keys (`weekly_report:${userId}:${startDate}:${endDate}`).
-- **Scan-Based Cache Invalidation**: Whenever a user creates, updates, or deletes a meal or goal, CalorieMate executes non-blocking `SCAN` iteration to invalidate that user's cached reports without pausing the Redis server.
+### 📊 4. Multi-Tier Redis Caching & Client-Side PDF Generation
+- **Today's Data Cache (`today_summary:${userId}:${date}`)**: Caches today's logged meals, macro totals, active goals, and remaining budget (`TTL: 30 Mins`).
+- **Last 7 Days Data Cache (`weekly_report:${userId}:${start}:${end}`)**: Caches 7-day daily intake vs target breakdowns and weekly averages for the Dashboard Weekly Chart and AI Nutritionist (`TTL: 1 Hour`).
+- **Analytical Data Cache (`analytics_report:${userId}:${start}:${end}:${mealType}`)**: Caches multi-period (7d, 15d, custom) reports filtered by meal type for the Reports page (`TTL: 1 Hour`).
+- **Scan-Based Cache Invalidation**: Whenever a user creates, updates, or deletes a meal or goal, CalorieMate executes non-blocking `SCAN` iteration to invalidate all three cache patterns for that user simultaneously without pausing the Redis server.
 - **Client-Side Vector PDF Engine**: Generates multi-page A4 PDFs in the browser using `html2canvas` and `jsPDF`, capturing Recharts visualizations with crisp vector resolution and auto-pagination.
 
 ```mermaid
 flowchart TD
-    Req["GET /api/reports/weekly"] --> CheckCache{"Redis Cache Hit?<br/>weekly_report:userId:start:end"}
+    Req["Incoming Request<br/>(/today, /weekly, /analytics)"] --> CheckCache{"Redis Cache Hit?<br/>today_summary | weekly_report | analytics_report"}
     CheckCache -- Yes --> ReturnCache["Return Cached JSON (Sub-10ms)"]
     CheckCache -- No --> QueryDB["Query PostgreSQL (Prisma Aggregation)"]
-    QueryDB --> StoreCache["Store in Redis (TTL: 1 Hour)"]
-    StoreCache --> ReturnDB["Return Report Response"]
+    QueryDB --> StoreCache["Store in Redis (TTL: 30m - 1h)"]
+    StoreCache --> ReturnDB["Return Fresh Response"]
 
-    Mutation["Mutation: Create / Edit / Delete Meal"] --> Invalidate["invalidateWeeklyReportCache(userId)"]
-    Invalidate --> Scan["SCAN pattern: weekly_report:userId:* (Non-blocking)"]
-    Scan --> DeleteKeys["DEL Matching Keys"]
+    Mutation["Mutation: Add / Edit / Delete Meal or Goal"] --> Invalidate["invalidateUserCaches(userId)"]
+    Invalidate --> Scan["SCAN patterns: today_summary:* | weekly_report:* | analytics_report:*"]
+    Scan --> DeleteKeys["DEL Matching Keys (Zero Stale Data)"]
 ```
 
 ---
