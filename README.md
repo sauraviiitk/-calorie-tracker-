@@ -79,31 +79,31 @@ Here is a visual overview of CalorieMate's interface and core workflows:
 
 ### 1. Interactive Dashboard & Calorie Progress Ring
 *Visualizes real-time calorie budgets, macronutrient breakdown cards, and chronological meal timelines.*
-![1. Interactive Dashboard](https://via.placeholder.com/1000x560.png?text=1.+Interactive+Dashboard+%26+Calorie+Ring)
+![1. Interactive Dashboard](./assets/Dashboard.png)
 
 ---
 
 ### 2. Chronological Food Diary & Quick Meal Logger
 *Organized meal tracking with flexible portion metrics, macro distribution, and historical data locks.*
-![2. Chronological Food Diary](https://via.placeholder.com/1000x560.png?text=2.+Chronological+Food+Diary+%26+Meal+Logger)
+![2. Chronological Food Diary](./assets/Food%20Diary.png)
 
 ---
 
 ### 3. Agentic AI Nutritionist (`ChatBotFAB`)
 *Conversational assistant featuring real-time Server-Sent Events token streaming and autonomous backend tool execution.*
-![3. Agentic AI Nutritionist](https://via.placeholder.com/1000x560.png?text=3.+Agentic+AI+Nutritionist+Assistant)
+![3. Agentic AI Nutritionist](./assets/ChatBot.png)
 
 ---
 
-### 4. AI Food Vision Scanner & Polling Pipeline
-*Upload meal photos or capture with camera for asynchronous macro estimation via Google Gemini.*
-![4. AI Food Vision Scanner](https://via.placeholder.com/1000x560.png?text=4.+AI+Food+Vision+Scanner)
+### 4. AI-Powered Calorie Extraction
+*Ability to upload a photo (product nutrition label or a plate of food) and automatically extract and pre-fill calorie and nutritional information using AI image analysis which i aolready build.*
+![4. AI-Powered Calorie Extraction](./assets/AddPhoto.png)
 
 ---
 
 ### 5. Multi-Period Nutrition Analytics & Client-Side PDF Export
 *Interactive Recharts analytics paired with a client-side vector PDF generation engine.*
-![5. Analytics and PDF Export](https://via.placeholder.com/1000x560.png?text=5.+Analytics+%26+Instant+PDF+Export)
+![5. Analytics and PDF Export](./assets/Report.png)
 
 </div>
 
