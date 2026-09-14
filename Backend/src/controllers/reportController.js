@@ -31,9 +31,15 @@ exports.getTodaySummary = asyncHandler(async (req, res, next) => {
 
   console.log(`[Cache] MISS today_summary for user ${userId} (${todayStr}) — querying DB`);
 
-  const [year, month, day] = todayStr.split('-').map(Number);
-  const startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
-  const endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
+  let startOfDay, endOfDay;
+  if (req.query.startDate && req.query.endDate) {
+    startOfDay = new Date(req.query.startDate);
+    endOfDay = new Date(req.query.endDate);
+  } else {
+    const [year, month, day] = todayStr.split('-').map(Number);
+    startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
+    endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
+  }
 
   const [meals, dateGoal, defaultGoal] = await Promise.all([
     prisma.meal.findMany({

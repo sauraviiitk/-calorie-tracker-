@@ -35,7 +35,7 @@ const DashboardPage = () => {
         endOfDay.setHours(23, 59, 59, 999);
 
         if (mealType === 'All') {
-          const todayRes = await api.get(`/reports/today?date=${dateStr}`);
+          const todayRes = await api.get(`/reports/today?date=${dateStr}&startDate=${startOfDay.toISOString()}&endDate=${endOfDay.toISOString()}`);
           if (todayRes.data.success) {
             setGoals(todayRes.data.data.goals);
             setMeals(todayRes.data.data.meals || []);
