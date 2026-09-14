@@ -1,20 +1,20 @@
-# CalorieMate
+# 🥗 CalorieMate — AI-Powered Nutritional Intelligence Platform
 
 <div align="center">
 
 ![CalorieMate Banner](https://via.placeholder.com/1200x320.png?text=CalorieMate+-+AI-Powered+Nutritional+Intelligence)
 
-**Production-grade, AI-driven personal nutrition and calorie tracking platform with agentic conversational intelligence, multi-modal ingestion, and high-performance async processing.**
+**Production-grade, AI-driven personal nutrition and calorie tracking platform featuring agentic conversational intelligence, multi-modal ingestion, asynchronous task orchestration, and client-side vector reporting.**
 
-[![Node.js Version](https://img.shields.io/badge/Node.js-v18+-339933?logo=node.js&logoColor=white)](#backend-architecture)
-[![React Version](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](#frontend-architecture)
-[![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?logo=vite&logoColor=white)](#frontend-architecture)
-[![Express](https://img.shields.io/badge/Express-5.2-000000?logo=express&logoColor=white)](#backend-architecture)
-[![Prisma](https://img.shields.io/badge/Prisma-5.22-2D3748?logo=prisma&logoColor=white)](#database-schema)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?logo=postgresql&logoColor=white)](#database-schema)
-[![Redis](https://img.shields.io/badge/Redis-BullMQ-DC382D?logo=redis&logoColor=white)](#async-task-processing--bullmq-queue)
-[![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.8_Flash-4285F4?logo=google&logoColor=white)](#ai-integration--agentic-architecture)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](#frontend-architecture)
+[![Node.js Version](https://img.shields.io/badge/Node.js-v18+-339933?logo=node.js&logoColor=white)](#6-installation-guide)
+[![React Version](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](#5-tech-stack)
+[![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?logo=vite&logoColor=white)](#5-tech-stack)
+[![Express](https://img.shields.io/badge/Express-5.2-000000?logo=express&logoColor=white)](#5-tech-stack)
+[![Prisma](https://img.shields.io/badge/Prisma-5.22-2D3748?logo=prisma&logoColor=white)](#5-tech-stack)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?logo=postgresql&logoColor=white)](#5-tech-stack)
+[![Redis BullMQ](https://img.shields.io/badge/Redis-BullMQ-DC382D?logo=redis&logoColor=white)](#5-tech-stack)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.8_Flash-4285F4?logo=google&logoColor=white)](#5-tech-stack)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](#5-tech-stack)
 
 </div>
 
@@ -22,94 +22,43 @@
 
 ## 📖 Table of Contents
 
-- [Project Overview](#-project-overview)
-- [Key Features](#-key-features)
-- [System Architecture](#-system-architecture)
-- [Security, Hashing & Authentication](#-security-hashing--authentication)
-- [Asynchronous Task Processing & BullMQ](#-asynchronous-task-processing--bullmq)
-- [Redis Caching & Invalidation Strategy](#-redis-caching--invalidation-strategy)
-- [AI Integration & Agentic Architecture](#-ai-integration--agentic-architecture)
-- [PDF Generation & Reporting Engine](#-pdf-generation--reporting-engine)
-- [Database Schema & Relational Design](#-database-schema--relational-design)
-- [API Reference](#-api-reference)
-- [Frontend Architecture](#-frontend-architecture)
-- [Local Setup & Run Guide](#-local-setup--run-guide)
-- [Troubleshooting & FAQ](#-troubleshooting--faq)
+1. [Overview](#1-overview)
+2. [Video Demonstration](#2-video-demonstration)
+3. [Glimpse of the App](#3-glimpse-of-the-app)
+4. [Features](#4-features)
+5. [Tech Stack](#5-tech-stack)
+6. [Installation Guide](#6-installation-guide)
+7. [Project Structure](#7-project-structure)
+8. [User Guide](#8-user-guide)
 
 ---
 
-## 🌟 Project Overview
+## 1. Overview
 
-**CalorieMate** eliminates the friction and cognitive load inherent in traditional manual calorie tracking. By marrying modern web technologies with multi-modal generative AI, CalorieMate allows users to log and monitor their dietary intake seamlessly through **text**, **voice/chat**, **food photographs**, or **PDF food diaries**.
+**CalorieMate** eliminates the cognitive friction inherent in traditional manual calorie and macronutrient tracking. Traditional tracking applications force users through repetitive search forms, complex dropdowns, and manual weight inputs. 
 
-### Core Engineering Objectives
-- **Zero-Friction Ingestion**: AI-assisted natural language meal logging and image recognition.
-- **Strict Data Isolation**: Tenant-isolated relational PostgreSQL storage governed by verified JWT claims.
-- **Resilient Asynchrony**: Offloading heavy AI vision inference and document parsing into Redis-backed worker queues.
-- **Idempotent Operations**: Cryptographic SHA-256 fingerprinting to prevent redundant compute and duplicate logs.
-- **High-Performance Caching**: Redis caching with automated, non-blocking scan-based invalidation.
-- **Client-Side Export**: High-resolution, multi-page vector-accurate PDF generation directly in the browser.
+CalorieMate reimagines dietary management by unifying modern full-stack web architecture with multi-modal generative AI. Users can log and monitor nutritional intake through **natural conversational dialogue**, **meal photographs**, **tabular PDF food diaries**, or **precise manual entry**.
 
----
+### 🎯 Core Engineering Objectives
+- **Zero-Friction Multi-Modal Ingestion**: Log meals via natural conversational speech/text, computer vision camera capture, or document ingestion.
+- **Agentic Autonomy**: Real-time Server-Sent Events (SSE) AI assistant capable of autonomous tool execution (querying intake, calculating macros, logging meals, and evaluating calorie budgets).
+- **High-Performance Asynchronous Offloading**: Offload compute-heavy multi-modal AI inferences and PDF parsers to Redis-backed BullMQ queues with cryptographic SHA-256 deduplication.
+- **Enterprise-Grade Data Isolation & Integrity**: Tenant-isolated PostgreSQL relational storage governed by cryptographically verified JWT claims, featuring a strict "Today-Only" historical data mutation lock.
+- **Client-Side Vector Reporting**: Dynamic, multi-page vector-accurate PDF generation executed entirely in the browser, eliminating server-side headless browser overhead.
 
-## ⚡ Key Features
-
-### 🥗 Nutrition & Meal Tracking
-- **Chronological Meal Flow**: Meals are structured in natural chronological order: **Breakfast → Lunch → Snacks → Dinner**.
-- **Granular Macro Tracking**: Tracks Calories (kcal), Protein (g), Carbohydrates (g), and Fat (g) with decimal-level precision.
-- **Flexible Quantities & Units**: Supports standard measurements (grams, kilograms, milliliters, liters, slices, cups, bowls, servings, tablespoons, teaspoons).
-- **"Today Only" Mutation Rule**: Enforces strict historical data integrity: past meal logs are immutable read-only records, preventing retroactive data contamination.
-
-### 🎯 Goal Management & Progress Tracking
-- **Global Nutritional Baselines**: Set default daily calorie and macronutrient targets.
-- **Date-Specific Overrides**: Schedule specific macro/calorie targets for high-carb days, refeeds, or cut periods using composite `[userId, date]` indexing.
-- **Body Weight Progression**: Track current body weight against target goals with visual milestone indicators.
-
-### 📊 Analytics, Charts & Reporting
-- **Multi-Period Analytics**: View nutrition performance across 7 Days, 15 Days, or Custom Date Ranges.
-- **Interactive Visualizations (Recharts)**:
-  - Weekly/Daily Calorie Intake vs Target Bar & Line Charts.
-  - Macro distribution trends across time.
-  - Interactive Macronutrient Composition Donut Chart.
-  - Micronutrient and performance breakdown tables.
-- **Instant PDF Export**: Generate and download complete, high-definition nutrition reports as multi-page A4 PDFs with a single click.
-
-### 🤖 Agentic AI Nutritionist (`ChatBotFAB`)
-- **Interactive Conversational Interface**: Minimizable floating assistant with a full-screen expanded viewing mode and clean typography.
-- **Server-Sent Events (SSE) Streaming**: Real-time token streaming powered by Google Gemini 3.8 Flash.
-- **Autonomous Tool Execution**: The AI agent evaluates intent and executes backend tools on behalf of the user:
-  - `logMeal`: Directly calculates macros and logs meals into the database without requiring confirmations.
-  - `getMeals`: Queries the user's logged intake for today or historical dates.
-  - `getGoals`: Retrieves active daily targets.
-  - `getWeeklySummary`: Synthesizes multi-day trends.
-- **Cross-Component Event Bus**: Emits custom `appDataChanged` browser events to refresh the dashboard and diary instantly whenever the AI performs an action.
-
-### 📸 AI Food Vision Scanner
-- **Multi-Format Upload**: Accepts food photos via file upload or camera capture.
-- **Asynchronous Queue Ingestion**: Offloads image analysis to background workers, returning a job ID for client-side polling.
-- **Automated Nutrition Extraction**: Estimates food identity, portion size, calories, protein, carbs, and fat.
-
-### 📄 Bulk PDF Food Diary Import
-- **Multi-Entry Document Parsing**: Extracts multiple meals from complex tabular or textual food diary PDFs.
-- **Asynchronous Processing**: Background extraction using BullMQ prevents request timeouts and handles multi-page PDFs reliably.
-
----
-
-## 🏗 System Architecture
-
-CalorieMate adopts a decoupled client-server architecture paired with an asynchronous job-processing pipeline and a Redis caching layer.
+### 🏗 High-Level System Architecture
 
 ```mermaid
 flowchart TB
     %% Client Layer
-    subgraph ClientLayer ["Client Layer (React 19 + Vite)"]
+    subgraph ClientLayer ["Client Layer (React 19 + Vite 8)"]
         SPA["React SPA (Tailwind CSS)"]
         ChatFAB["Agentic AI Assistant (SSE)"]
         PDFGen["html2canvas + jsPDF Engine"]
     end
 
     %% API Gateway Layer
-    subgraph APILayer ["Backend API (Express 5.2 / Node.js)"]
+    subgraph APILayer ["Backend API Gateway (Express 5.2 / Node.js)"]
         Router["Express REST Router"]
         AuthMid["Auth Middleware (JWT Verify)"]
         ZodVal["Zod Schema Validation"]
@@ -125,12 +74,12 @@ flowchart TB
     end
 
     %% Asynchronous Processing Layer
-    subgraph QueueLayer ["Background Processing (BullMQ & Redis)"]
+    subgraph QueueLayer ["Asynchronous Queue & Cache (Redis + BullMQ)"]
         RedisQ[("Redis Server (ioredis)")]
         FoodQ["Queue: 'food-analysis'"]
         DocQ["Queue: 'pdf-import'"]
         
-        subgraph Workers ["BullMQ Workers (Monolith/Dedicated)"]
+        subgraph Workers ["BullMQ Workers (Monolith or Standalone)"]
             FoodWorker["foodAnalysis.worker.js"]
             DocWorker["pdfImport.worker.js"]
         end
@@ -141,10 +90,10 @@ flowchart TB
         PrismaORM["Prisma Client ORM"]
         Postgres[("PostgreSQL Database")]
         GeminiAPI[["Google Gemini 3.8 Flash API"]]
-        CloudinaryCDN[["Cloudinary Media CDN"]]
+        CloudinaryCDN[["Cloudinary Media CDN (Optional)"]]
     end
 
-    %% Connections
+    %% Interconnects
     SPA -- "HTTP / REST (Axios Interceptors)" --> Router
     ChatFAB -- "Server-Sent Events (SSE)" --> AIC
     Router --> AuthMid --> ZodVal
@@ -165,84 +114,106 @@ flowchart TB
     %% Workers to Services
     FoodWorker & DocWorker --> GeminiAPI
     FoodWorker & DocWorker --> PrismaORM
-    MealC -- "Invalidate Cache (SCAN)" --> RedisQ
+    MealC -- "Scan Invalidate Cache" --> RedisQ
 ```
 
 ---
 
-## 🔐 Security, Hashing & Authentication
+## 2. Video Demonstration
 
-CalorieMate implements defense-in-depth security principles across transport, authentication, input validation, and file integrity.
+Experience CalorieMate in action—from conversational AI meal logging to instant photo vision analysis and vector PDF reporting:
+
+<div align="center">
+
+[![CalorieMate Video Walkthrough](https://via.placeholder.com/1200x600.png?text=▶+Click+to+Watch+CalorieMate+Full+Demo)](https://your-video-link.com)
+
+*Click the banner above to watch the comprehensive walkthrough of CalorieMate.*
+
+</div>
+
+---
+
+## 3. Glimpse of the App
+
+Here is a visual overview of CalorieMate's interface and core workflows:
+
+<div align="center">
+
+### 1. Interactive Dashboard & Calorie Progress Ring
+*Visualizes real-time calorie budgets, macronutrient breakdown cards, and chronological meal timelines.*
+![1. Interactive Dashboard](https://via.placeholder.com/1000x560.png?text=1.+Interactive+Dashboard+%26+Calorie+Ring)
+
+---
+
+### 2. Chronological Food Diary & Quick Meal Logger
+*Organized meal tracking with flexible portion metrics, macro distribution, and historical data locks.*
+![2. Chronological Food Diary](https://via.placeholder.com/1000x560.png?text=2.+Chronological+Food+Diary+%26+Meal+Logger)
+
+---
+
+### 3. Agentic AI Nutritionist (`ChatBotFAB`)
+*Conversational assistant featuring real-time Server-Sent Events token streaming and autonomous backend tool execution.*
+![3. Agentic AI Nutritionist](https://via.placeholder.com/1000x560.png?text=3.+Agentic+AI+Nutritionist+Assistant)
+
+---
+
+### 4. AI Food Vision Scanner & Polling Pipeline
+*Upload meal photos or capture with camera for asynchronous macro estimation via Google Gemini.*
+![4. AI Food Vision Scanner](https://via.placeholder.com/1000x560.png?text=4.+AI+Food+Vision+Scanner)
+
+---
+
+### 5. Multi-Period Nutrition Analytics & Client-Side PDF Export
+*Interactive Recharts analytics paired with a client-side vector PDF generation engine.*
+![5. Analytics and PDF Export](https://via.placeholder.com/1000x560.png?text=5.+Analytics+%26+Instant+PDF+Export)
+
+</div>
+
+---
+
+## 4. Features
+
+### 🥗 1. Chronological Nutrition & Meal Tracking
+- **Chronological Flow**: Meals are structured in natural order: **Breakfast → Lunch → Snacks → Dinner**.
+- **Granular Macro Precision**: Computes and stores Calories (kcal), Protein (g), Carbohydrates (g), and Fat (g) with decimal precision.
+- **Flexible Measurement Units**: Supports standard measurements (grams, ml, slices, cups, bowls, servings, tablespoons, teaspoons).
+- **"Today Only" Mutation Integrity Rule**: Historical entries from previous dates are strictly immutable, preventing retroactive tampering with historical logs.
+
+### 🤖 2. Agentic Conversational AI Nutritionist (`ChatBotFAB`)
+- **Server-Sent Events (SSE) Streaming**: Delivers fast token-by-token streaming responses powered by Google Gemini 3.8 Flash.
+- **Autonomous Tool Calling**: Rather than just chatting, the AI evaluates user intent and autonomously invokes backend functions:
+  - `logMeal`: Computes nutritional values and writes new meals into PostgreSQL.
+  - `getMeals`: Queries today's or historical logs to answer intake queries.
+  - `getGoals`: Evaluates remaining calorie/macro headroom against user targets.
+  - `getWeeklySummary`: Synthesizes 7-day intake averages and identifies trends.
+- **Cross-Component Event Bus**: Emits custom `appDataChanged` DOM events, causing the Dashboard and Diary to refresh immediately when the AI logs a meal.
 
 ```mermaid
-flowchart LR
-    subgraph Client ["Client Request"]
-        Password["Plaintext Password"]
-        File["Uploaded File (Image/PDF)"]
-    end
+sequenceDiagram
+    autonumber
+    actor User as User
+    participant UI as ChatBotFAB (Client)
+    participant AI as aiController (Backend)
+    participant Gemini as Google Gemini 3.8 Flash
+    participant DB as PostgreSQL (Prisma)
 
-    subgraph Security ["Security Engine"]
-        Bcrypt["bcryptjs (Salt Rounds: 10)"]
-        SHA["Crypto SHA-256 Fingerprinting"]
-        JWT["HMAC SHA-256 JWT Token"]
-        Zod["Zod Validation Middleware"]
-    end
-
-    subgraph Storage ["Database State"]
-        UserTable[("User.password (Hash)")]
-        JobTable[("Job.fileHash (Unique Constraint)")]
-    end
-
-    Password --> Bcrypt --> UserTable
-    File --> SHA --> JobTable
-    UserTable -. "Verify & Sign" .-> JWT
+    User->>UI: "I just had a bowl of oatmeal and 2 boiled eggs"
+    UI->>AI: POST /api/ai/chat (SSE Stream)
+    AI->>Gemini: Stream prompt with registered tool schemas
+    Gemini-->>AI: Function Call: logMeal({ name: "Oatmeal & Eggs", mealType: "Breakfast", calories: 340, ... })
+    AI->>DB: Execute meal insertion (Prisma)
+    DB-->>AI: Meal record created
+    AI-->>UI: SSE Event: action { type: 'meal_logged', meal: {...} }
+    Note over UI: Dispatches 'appDataChanged' event<br/>Dashboard updates live!
+    AI->>Gemini: Tool response payload
+    Gemini-->>AI: Stream conversational confirmation text
+    AI-->>UI: SSE Event: text chunks ("Logged your breakfast (340 kcal)...")
+    AI-->>UI: SSE Event: [DONE]
 ```
 
-### 1. Password Hashing (`bcryptjs`)
-- **Adaptive Salt Generation**: Uses `bcrypt.genSalt(10)` to compute a unique 128-bit salt per user.
-- **One-Way Cryptographic Storage**: Passwords are never stored or logged in plaintext. Hashes take the standard `$2a$10$...` Modular Crypt Format.
-- **Timing Attack Mitigation**: Password validation uses `bcrypt.compare()`, which executes in constant time to eliminate timing vulnerability attacks.
-- **Granular Auth Error Feedback**: Provides exact, secure error categorization for clients ("User does not exist" vs. "Incorrect password") while maintaining operational safety.
-
-### 2. Stateless JWT Authentication
-- **Token Format**: Standard JSON Web Tokens signed using HMAC SHA-256 (`HS256`).
-- **Token Expiration**: Configured with a 30-day lifecycle (`expiresIn: '30d'`).
-- **Authorization Guard**: The `protect` middleware verifies incoming `Authorization: Bearer <token>` headers, decodes the payload, and injects `req.user.id` into the request lifecycle.
-- **Tenant Isolation**: Database queries strictly use `req.user.id` derived from the cryptographically verified JWT token—preventing Cross-Tenant Object Reference vulnerabilities.
-
-### 3. File Cryptographic Hashing & Idempotency (SHA-256)
-Uploading identical files can trigger redundant, costly AI operations. CalorieMate implements SHA-256 cryptographic idempotency:
-```javascript
-// Compute SHA-256 digest of uploaded file buffer
-const fileBuffer = fs.readFileSync(filePath);
-const fileHash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
-
-// Check composite unique index [userId, fileHash]
-const existingJob = await prisma.foodAnalysisJob.findUnique({
-  where: { userId_fileHash: { userId, fileHash } }
-});
-
-if (existingJob && existingJob.status === 'COMPLETED') {
-  // Return cached result immediately with zero redundant compute
-  return res.status(200).json({ success: true, result: existingJob.result });
-}
-```
-- **Composite Unique Indexing**: Both `FoodAnalysisJob` and `PdfImportJob` enforce `@@unique([userId, fileHash])`.
-- **Deduplication Lifecycle**:
-  - If a file is uploaded while a previous job is still `PENDING` or `PROCESSING`, the client receives the existing `jobId` to avoid duplicate jobs.
-  - If the previous job is `COMPLETED`, the stored result is returned immediately (`200 OK`) in milliseconds.
-
-### 4. Input Validation via Zod
-All critical payloads are validated against strict Zod schemas before reaching business logic:
-- `registerSchema`: Validates email formatting, non-empty names, and minimum password lengths.
-- `loginSchema`: Ensures credentials conform to required constraints.
-- `mealSchema`: Validates numeric ranges for calories and macros, as well as strict enum validation for meal types (`Breakfast | Lunch | Snacks | Dinner`).
-
----
-
-## ⚙️ Asynchronous Task Processing & BullMQ
-
-To ensure sub-100ms HTTP response times, expensive computational workloads (Gemini Vision analysis and PDF parsing) are delegated to BullMQ queues powered by Redis.
+### 📸 3. Multi-Modal Vision Scanner & PDF Diary Importer
+- **Asynchronous BullMQ Pipeline**: Heavy computer vision analysis and PDF document parsing are enqueued into Redis BullMQ queues, preventing HTTP request timeouts.
+- **SHA-256 Cryptographic Idempotency**: Files are fingerprinted upon upload. If an identical image or PDF was already processed, the system returns the cached result instantly, preventing redundant Gemini API costs.
 
 ```mermaid
 sequenceDiagram
@@ -252,11 +223,11 @@ sequenceDiagram
     participant DB as PostgreSQL
     participant Redis as Redis Queue (BullMQ)
     participant Worker as Background Worker
-    participant Gemini as Google Gemini API
+    participant Gemini as Google Gemini 3.8 Flash
 
     User->>API: POST /api/ai/analyze-food (multipart/form-data)
     API->>API: Compute SHA-256 fileHash
-    API->>DB: Check [userId, fileHash] exists?
+    API->>DB: Check if [userId, fileHash] exists
     alt File Already Processed
         DB-->>API: Returns existing record (COMPLETED)
         API-->>User: 200 OK (Instant Cached Result)
@@ -267,119 +238,64 @@ sequenceDiagram
         
         loop Polling every 2s
             User->>API: GET /api/ai/food-analysis/status/:jobId
-            API->>DB: Query job status
-            DB-->>API: Current status
-            API-->>User: { status: 'PENDING' | 'PROCESSING' }
+            API->>DB: Check status
+            DB-->>API: Status ('PENDING' | 'PROCESSING')
+            API-->>User: Status response
         end
 
         Redis->>Worker: Dispatch Job
         Worker->>DB: Update status to 'PROCESSING'
-        Worker->>Gemini: gemini-3.8-flash Vision Inference
+        Worker->>Gemini: Multimodal Vision Inference
         Gemini-->>Worker: Structured Nutritional JSON
-        Worker->>DB: Transaction: Save result & status = 'COMPLETED'
+        Worker->>DB: Save result & status = 'COMPLETED'
         
         User->>API: GET /api/ai/food-analysis/status/:jobId
         API->>DB: Query job status
-        DB-->>API: Status 'COMPLETED' + result data
+        DB-->>API: Status 'COMPLETED' + parsed macros
         API-->>User: 200 OK { status: 'COMPLETED', result: {...} }
     end
 ```
 
-### BullMQ Configuration & Resilience
-- **Exponential Backoff**: Configured with 3 retry attempts with exponential backoff delays.
-- **Failover / Graceful Degradation**: If Redis is unreachable, the system fails cleanly with a `503 Service Unavailable` message without taking down the server.
-- **Monolith Worker Deployment**: In development and single-container deployments, workers automatically initialize inside `server.js`. In production, workers can scale horizontally as standalone processes (`npm run worker`, `npm run worker:pdf`).
-
----
-
-## 🚀 Redis Caching & Invalidation Strategy
-
-Weekly and custom nutrition reports perform multi-table aggregations over dates and meals. CalorieMate incorporates a caching strategy with automatic invalidation.
+### 📊 4. High-Performance Caching & Client-Side PDF Generation
+- **Non-Blocking Redis Cache**: Aggregated weekly and custom reports are cached in Redis (`TTL: 1 Hour`) under scoped keys (`weekly_report:${userId}:${startDate}:${endDate}`).
+- **Scan-Based Cache Invalidation**: Whenever a user creates, updates, or deletes a meal or goal, CalorieMate executes non-blocking `SCAN` iteration to invalidate that user's cached reports without pausing the Redis server.
+- **Client-Side Vector PDF Engine**: Generates multi-page A4 PDFs in the browser using `html2canvas` and `jsPDF`, capturing Recharts visualizations with crisp vector resolution and auto-pagination.
 
 ```mermaid
 flowchart TD
-    Req["GET /api/reports/weekly"] --> CheckCache{"Redis Cache Hit?<br/>key: weekly_report:uid:start:end"}
-    CheckCache -- Yes --> ReturnCache["Return Cached JSON (instant)"]
-    CheckCache -- No --> QueryDB["Query PostgreSQL (Prisma)"]
+    Req["GET /api/reports/weekly"] --> CheckCache{"Redis Cache Hit?<br/>weekly_report:userId:start:end"}
+    CheckCache -- Yes --> ReturnCache["Return Cached JSON (Sub-10ms)"]
+    CheckCache -- No --> QueryDB["Query PostgreSQL (Prisma Aggregation)"]
     QueryDB --> StoreCache["Store in Redis (TTL: 1 Hour)"]
-    StoreCache --> ReturnDB["Return Aggregated Data"]
+    StoreCache --> ReturnDB["Return Report Response"]
 
-    Mutation["Mutation: Add / Edit / Delete Meal or Goal"] --> Invalidate["invalidateWeeklyReportCache(userId)"]
+    Mutation["Mutation: Create / Edit / Delete Meal"] --> Invalidate["invalidateWeeklyReportCache(userId)"]
     Invalidate --> Scan["SCAN pattern: weekly_report:userId:* (Non-blocking)"]
     Scan --> DeleteKeys["DEL Matching Keys"]
 ```
 
-### Key Highlights
-- **Scoped Cache Keys**: Keys follow `weekly_report:${userId}:${startDate}:${endDate}`, strictly isolating user caches.
-- **Non-Blocking Invalidation (`SCAN`)**: Never uses `KEYS *`, which blocks Redis event loops. Instead, it iterates safely using `SCAN` with a count of 100 to clean up invalid keys without latency spikes.
-- **Mutation Hooks**: Any meal creation, modification, deletion, or goal update automatically triggers cache invalidation for that user.
-
 ---
 
-## 🧠 AI Integration & Agentic Architecture
+## 5. Tech Stack
 
-CalorieMate integrates Google Gemini 3.8 Flash (`gemini-3.8-flash`) across two distinct modalities:
+| Layer | Technology | Version | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Frontend Framework** | React | `v19.2` | Core component architecture & declarative state |
+| **Build Tool** | Vite | `v8.3` | High-performance Hot Module Replacement (HMR) & bundling |
+| **Styling & Design** | Tailwind CSS | `v3.4` | Responsive utility-first design system |
+| **Data Visualization** | Recharts | `v3.10` | Interactive calorie bar/line charts and macro donut charts |
+| **PDF Reporting** | jsPDF & html2canvas | `v4.2` / `v1.4` | Client-side DOM rasterization and multi-page vector PDF export |
+| **HTTP & Networking** | Axios | `v1.20` | REST client with automatic JWT bearer token interceptors |
+| **Backend Runtime** | Node.js | `v18+` | Server execution runtime |
+| **API Framework** | Express | `v5.2` | REST API routes, middleware pipeline, and SSE streaming |
+| **ORM & Modeling** | Prisma | `v5.22` | Type-safe database client and automated schema migrations |
+| **Primary Database** | PostgreSQL | `v14+` | Relational storage with composite indices and cascading constraints |
+| **Message Broker** | Redis & BullMQ | `v7` / `v6.3` | Asynchronous worker queues and distributed caching |
+| **AI Intelligence** | Google Gemini | `3.8 Flash` | Multimodal vision analysis, conversational SSE streaming, and agentic tool-calling |
+| **Authentication** | bcryptjs & JWT | `v3.0` / `v9.0` | 10-round salted password hashing and stateless HS256 tokens |
+| **Schema Validation** | Zod | `v4.6` | Runtime input validation for incoming request payloads |
 
-### 1. The Agentic Chatbot (`ChatBotFAB.jsx`)
-The chatbot operates on an agentic loop over Server-Sent Events (SSE):
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as User
-    participant UI as ChatBotFAB (Frontend)
-    participant AI as aiController.chat (Backend)
-    participant Gemini as Google Gemini 3.8 Flash
-    participant DB as Prisma / PostgreSQL
-
-    User->>UI: "I just had a bowl of oatmeal and 2 boiled eggs"
-    UI->>AI: POST /api/ai/chat (SSE Connection)
-    AI->>Gemini: Stream prompt with registered function tools
-    Gemini-->>AI: Function Call: logMeal({ name, mealType: 'Breakfast', calories: 340, ... })
-    AI->>DB: Execute mealService.addMeal()
-    DB-->>AI: Meal successfully created
-    AI-->>UI: SSE Event: action { type: 'meal_logged', meal: {...} }
-    Note over UI: UI dispatches 'appDataChanged'<br/>Dashboard updates live!
-    AI->>Gemini: Function result payload
-    Gemini-->>AI: Stream conversational text tokens
-    AI-->>UI: SSE Event: text chunks ("Logged your oatmeal & eggs (340 kcal)...")
-    AI-->>UI: SSE Event: [DONE]
-```
-
-#### Registered Agent Tools:
-1. `logMeal`: Directly records meal items with estimated calories, protein, carbs, and fat.
-2. `getMeals`: Queries the user's logged meals for a given day.
-3. `getGoals`: Retrieves nutritional goals to provide feedback on calorie headroom.
-4. `getWeeklySummary`: Synthesizes 7-day intake averages.
-
-### 2. Multi-Modal Vision & Document Extraction
-- **Image Scanner**: Sends the image buffer directly to Gemini 3.8 Flash with specialized instructions to identify dishes and estimate macronutrient breakdowns.
-- **PDF Diary Parser**: Ingests multi-page base64-encoded PDF documents directly into Gemini's multi-modal context, instructing the model to parse tabular and textual data into structured arrays of meals.
-
----
-
-## 🖨 PDF Generation & Reporting Engine
-
-Rather than relying on server-side headless browsers (e.g. Puppeteer) which consume heavy CPU/memory footprints, CalorieMate utilizes a client-side vector-accurate capture engine:
-
-```mermaid
-flowchart LR
-    ReportDOM["DOM Element (#report-content)<br/>(Charts, Metrics, Donut)"] --> Canvas["html2canvas (2x Scale, CORS Enabled)"]
-    Canvas --> RasterData["High-Res JPEG/PNG Data URL"]
-    RasterData --> PDFDoc["jsPDF Document (A4 Orientation)"]
-    PDFDoc --> Pagination["Multi-Page Slice & Auto-Pagination Loop"]
-    Pagination --> Download["Browser Direct Download (.pdf)"]
-```
-
-- **High-DPI Capture**: Renders DOM elements at `scale: 2` for crisp graphics and typography on high-resolution displays.
-- **Dynamic Auto-Pagination**: Calculates content height against standard A4 page heights, adding pages automatically when content overflows.
-- **Dynamic File Naming**: Formats the downloaded file according to the selected date range (e.g., `Nutrition_Report_7_days.pdf`, `Nutrition_Report_custom.pdf`).
-
----
-
-## 🗄 Database Schema & Relational Design
-
-The relational model is managed with Prisma ORM and hosted on PostgreSQL.
+### 🗄 Relational Database Schema
 
 ```mermaid
 erDiagram
@@ -456,176 +372,77 @@ erDiagram
     }
 ```
 
-### Table Details & Indices
-- **`User`**: Contains authentication credentials and profile preferences. Enforces a unique index on `email`.
-- **`Meal`**: Stores individual meal entries. Linked by foreign key to `User(id)` with cascading relationship integrity.
-- **`Goal`**: Stores nutritional targets. Features a unique compound index `@@unique([userId, date])`, allowing one global default goal (`date = null`) alongside date-specific overrides (`date = "YYYY-MM-DD"`).
-- **`FoodAnalysisJob` & `PdfImportJob`**: State machines for tracking async tasks. Features a unique compound index `@@unique([userId, fileHash])` for SHA-256 deduplication and caching.
-
 ---
 
-## 📡 API Reference
+## 6. Installation Guide
 
-### Authentication Endpoints (`/api/auth`)
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Register a new user (`name`, `email`, `password`) | No |
-| `POST` | `/api/auth/login` | Authenticate user and receive JWT token | No |
-| `GET` | `/api/auth/me` | Fetch authenticated user profile | Yes (Bearer) |
-
-### Meal Tracking Endpoints (`/api/meals`)
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/meals` | Get meals within date range and optional `mealType` filter | Yes (Bearer) |
-| `POST` | `/api/meals` | Log a new meal (enforces "Today Only" rule) | Yes (Bearer) |
-| `PUT` | `/api/meals/:id` | Update an existing meal | Yes (Bearer) |
-| `DELETE` | `/api/meals/:id` | Delete a meal entry | Yes (Bearer) |
-
-### Goals Endpoints (`/api/goals`)
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/goals` | Get default global goal | Yes (Bearer) |
-| `POST` | `/api/goals` | Set or update default/date-specific goal | Yes (Bearer) |
-| `GET` | `/api/goals/range` | Fetch goals across a specified date range | Yes (Bearer) |
-
-### Reports & Analytics (`/api/reports`)
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/reports/weekly` | Get 7-day aggregated report (Redis-cached) | Yes (Bearer) |
-
-### AI & Async Queue Endpoints (`/api/ai` & `/api/diary`)
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/ai/chat` | Conversational assistant stream via Server-Sent Events | Yes (Bearer) |
-| `POST` | `/api/ai/analyze-food` | Upload food image, returns BullMQ `jobId` | Yes (Bearer) |
-| `GET` | `/api/ai/food-analysis/status/:jobId` | Poll food analysis job status | Yes (Bearer) |
-| `POST` | `/api/diary/import-pdf` | Upload PDF diary, returns BullMQ `jobId` | Yes (Bearer) |
-| `GET` | `/api/diary/import-pdf/status/:jobId` | Poll PDF import job status | Yes (Bearer) |
-
----
-
-## 💻 Frontend Architecture
-
-The frontend is built with React 19 and Vite, styled using Tailwind CSS, and structured for modular maintainability:
-
-```
-Frontend/src/
-├── components/
-│   ├── ai/
-│   │   └── ChatBotFAB.jsx          # Floating Action Button, expandable chat, SSE parser
-│   ├── dashboard/
-│   │   ├── CalorieRing.jsx         # Circular progress visualization
-│   │   ├── MacroCard.jsx           # Macronutrient breakdown cards
-│   │   └── MealsList.jsx           # Daily meal listings
-│   ├── diary/
-│   │   ├── MealLoggerModal.jsx     # Meal creation/edit modal with unit selectors
-│   │   └── PdfImportModal.jsx      # Async PDF upload and polling modal
-│   ├── reports/
-│   │   ├── DailyNutritionPerformance.jsx
-│   │   ├── MacroCompositionDonut.jsx
-│   │   ├── MacroTrendsChart.jsx
-│   │   ├── MicronutrientSummary.jsx
-│   │   ├── NutritionSummaryMetrics.jsx
-│   │   └── WeeklyCalorieChart.jsx
-│   └── ui/
-│       ├── ErrorAlert.jsx          # Clean user-facing error banners
-│       └── ErrorState.jsx          # Full-page error states
-├── context/
-│   └── AuthContext.jsx             # Authentication provider and state management
-├── pages/
-│   ├── DashboardPage.jsx           # Main user overview
-│   ├── FoodDiaryPage.jsx           # Chronological diary view
-│   ├── GoalsPage.jsx               # Target calories and weight tracking
-│   ├── ReportsPage.jsx             # Analytics dashboard & PDF export
-│   └── ScannerPage.jsx             # AI Food Vision scanner
-└── services/
-    └── api.js                      # Axios instance with auth token injection
-```
-
----
-
-## 🛠 Local Setup & Run Guide
-
-Follow these clear, step-by-step instructions to set up, configure, and run **CalorieMate** on your local machine.
-
----
+Follow these step-by-step instructions to configure, run, and test **CalorieMate** on your local machine.
 
 ### 📋 Prerequisites
 
-Ensure you have the following installed on your system:
+Ensure you have the following installed on your workstation:
 
-| Prerequisite | Minimum Version | Purpose | Download / Source |
-| :--- | :--- | :--- | :--- |
-| **Node.js** | v18.0.0+ | JavaScript runtime for Backend & Frontend | [nodejs.org](https://nodejs.org/) |
-| **npm** | v9.0.0+ | Package manager (bundled with Node.js) | — |
-| **PostgreSQL** | v14.0+ | Relational database | [postgresql.org](https://www.postgresql.org/download/) or free cloud [Supabase](https://supabase.com/) / [Neon](https://neon.tech/) |
-| **Redis Server** | v6.2+ | Queue broker for BullMQ & cache | [redis.io](https://redis.io/download/) or free cloud [Upstash](https://upstash.com/) |
-| **Google Gemini API Key** | — | Multimodal AI vision, chat & PDF parsing | Free at [Google AI Studio](https://aistudio.google.com/) |
+1. **Node.js**: v18.0.0 or higher ([Download Node.js](https://nodejs.org/))
+2. **npm**: v9.0.0 or higher (packaged with Node.js)
+3. **PostgreSQL**: v14 or higher ([Download PostgreSQL](https://www.postgresql.org/download/) or use a free cloud database like [Supabase](https://supabase.com/) / [Neon](https://neon.tech/))
+4. **Redis Server**: v6.2 or higher ([Download Redis](https://redis.io/download/) or use a free cloud instance from [Upstash](https://upstash.com/))
+5. **Google Gemini API Key**: Free API key from [Google AI Studio](https://aistudio.google.com/)
 
 ---
 
 ### 1️⃣ Step 1: Clone the Repository
 
-Clone the project to your computer and navigate into the project directory:
+Clone the project to your local machine:
 
 ```bash
 git clone https://github.com/your-username/personal-calorie-tracker.git
 cd personal-calorie-tracker
 ```
 
-The repository structure contains:
-- **`Backend/`**: Node.js & Express API, Prisma ORM, BullMQ background workers.
-- **`Frontend/`**: React 19 Single Page App built with Vite and Tailwind CSS.
-
 ---
 
 ### 2️⃣ Step 2: Backend Setup & Configuration
 
 #### A. Install Backend Dependencies
-Open your terminal, navigate into the `Backend` directory, and install the dependencies:
-
 ```bash
 cd Backend
 npm install
 ```
 
 #### B. Create the Backend `.env` File
-In the `Backend` folder, create a new file named `.env`:
+In the `Backend` directory, create a new file named `.env`:
 
 ```bash
-# On Linux / macOS:
+# Linux / macOS:
 touch .env
 
-# On Windows (PowerShell):
+# Windows (PowerShell):
 New-Item .env -ItemType File
 ```
 
-Paste the following configuration into `Backend/.env`:
+Populate `Backend/.env` with your configuration:
 
 ```env
 # Server Port & Environment
 PORT=5000
 NODE_ENV=development
 
-# Authentication Secret (any random secure string)
+# JWT Authentication Secret (any secure random string)
 JWT_SECRET=your_super_secret_jwt_key_here
 
-# Google Gemini API Key (Required for AI Chatbot, Food Scanner & PDF Parser)
-# Get a free key at: https://aistudio.google.com/
+# Google Gemini API Key (Obtain free at https://aistudio.google.com/)
 GEMINI_API_KEY=AIzaSyYourGeminiApiKeyHere
 
-# PostgreSQL Database Connection String (Prisma ORM)
-# If using a local PostgreSQL database:
+# PostgreSQL Connection String (Prisma ORM)
+# Local PostgreSQL default example:
 DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/caloriemate?schema=public"
-
-# If using a cloud database (Supabase / Neon):
+# Supabase / Cloud Postgres example:
 # DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres"
 
-# Redis Connection URL (Required for BullMQ queue processing & caching)
-# If using a local Redis server:
+# Redis Connection URL (Used for BullMQ queues and report caching)
+# Local Redis default:
 REDIS_URL="redis://127.0.0.1:6379"
-
-# If using cloud Redis (Upstash):
+# Cloud Redis (Upstash) example:
 # REDIS_URL="redis://default:[password]@[host]:[port]"
 
 # Cloudinary Credentials (Optional - used for profile avatar uploads)
@@ -635,23 +452,23 @@ CLOUDINARY_API_SECRET=your_cloudinary_secret
 ```
 
 > [!NOTE]
-> Make sure your PostgreSQL server and Redis server are running before continuing. If your PostgreSQL password contains special characters (e.g. `@`, `:`, `/`), URL-encode them (for example, `@` becomes `%40`).
+> If your database password contains special characters (e.g. `@`, `:`, `/`), URL-encode them (for example, `@` becomes `%40`).
 
-#### C. Initialize Database with Prisma
+#### C. Push Database Schema with Prisma
 Run Prisma to create all required database tables and generate the Prisma Client:
 
 ```bash
-# Push the schema and create tables in your database:
+# Push schema and create tables in PostgreSQL:
 npx prisma db push
 
 # Generate the type-safe Prisma client:
 npx prisma generate
 ```
 
-*(Optional)* To view and manage your database visually in your browser:
+*(Optional)* To inspect your database visually via Prisma Studio:
 ```bash
 npx prisma studio
-# Opens Prisma Studio at http://localhost:5555
+# Opens visual browser at http://localhost:5555
 ```
 
 ---
@@ -659,7 +476,7 @@ npx prisma studio
 ### 3️⃣ Step 3: Frontend Setup & Configuration
 
 #### A. Install Frontend Dependencies
-Open a **second terminal window**, navigate to the `Frontend` directory, and install dependencies:
+Open a **new terminal window**, navigate to `Frontend`, and install packages:
 
 ```bash
 cd Frontend
@@ -667,17 +484,17 @@ npm install
 ```
 
 #### B. Create the Frontend `.env` File
-In the `Frontend` folder, create a file named `.env`:
+In the `Frontend` directory, create a `.env` file:
 
 ```bash
-# On Linux / macOS:
+# Linux / macOS:
 touch .env
 
-# On Windows (PowerShell):
+# Windows (PowerShell):
 New-Item .env -ItemType File
 ```
 
-Add the following variable to `Frontend/.env` so the frontend knows where the backend is running:
+Configure `Frontend/.env` with the backend API address:
 
 ```env
 # Backend API Base URL
@@ -686,9 +503,9 @@ VITE_API_URL=http://localhost:5000/api
 
 ---
 
-### 4️⃣ Step 4: Running the Application
+### 4️⃣ Step 4: Run the Application
 
-You need both the Backend and Frontend running concurrently in separate terminal windows.
+Run both servers concurrently in separate terminals:
 
 #### Terminal 1: Start the Backend Server
 ```bash
@@ -696,7 +513,7 @@ cd Backend
 npm run dev
 ```
 
-*Expected output in Terminal 1:*
+*Expected output:*
 ```
 [Server] Booting background workers for monolith deployment...
 [BullMQ] Food analysis worker started
@@ -711,7 +528,7 @@ cd Frontend
 npm run dev
 ```
 
-*Expected output in Terminal 2:*
+*Expected output:*
 ```
   VITE v8.3.0  ready in 240 ms
 
@@ -721,31 +538,9 @@ npm run dev
 
 ---
 
-### 5️⃣ Step 5: Verification & Testing Checklist
+### 5️⃣ Step 5: Production Build (Optional)
 
-Open your browser at **`http://localhost:5173`** and verify the app:
-
-1. **User Sign Up / Login**:
-   - Go to `/signup`, register a new user with email and password.
-   - You will be automatically redirected to the dashboard.
-2. **Log Meals**:
-   - Go to the **Food Diary** page (`/diary`).
-   - Click **"Log Meal"**, enter a meal name, select meal type (e.g. Breakfast), quantity, and calories. Confirm it appears in your daily list.
-3. **AI Nutritionist Assistant**:
-   - Click the floating green robot button in the bottom-right corner.
-   - Ask: *"What did I eat today?"* — the AI will stream a response with your logged food.
-   - Tell the AI: *"Log 2 scrambled eggs for breakfast"* — the agent will autonomously add the meal to your diary.
-4. **AI Food Vision Scanner**:
-   - Go to **Scanner** (`/scanner`) and upload a photo of food.
-   - The photo is queued via BullMQ and analyzed by Google Gemini to extract nutrition macros.
-5. **Reports & PDF Export**:
-   - Go to **Reports** (`/reports`) and click **"Export PDF Report"** to download a clean, multi-page vector PDF report of your nutrition.
-
----
-
-### 6️⃣ Step 6: Production Build (Optional)
-
-To test the optimized production build of the frontend:
+To compile and preview the production bundle:
 
 ```bash
 cd Frontend
@@ -755,37 +550,147 @@ npm run preview
 
 ---
 
-## ❓ Troubleshooting & FAQ
+## 7. Project Structure
 
-#### 1. Why do I see `PrismaClientInitializationError: Can't reach database server`?
-- Ensure your PostgreSQL service is running.
-- Verify the connection parameters in `Backend/.env` (`DATABASE_URL`).
-- Confirm the host, port (`5432`), database name, username, and password are correct.
+CalorieMate is organized as a modular, decoupled monorepo:
 
-#### 2. Why do I see `503 Service Unavailable` or `[Redis] Cache client error` on uploads?
-- BullMQ and caching require an active Redis instance.
-- Ensure your local Redis server or cloud Redis instance (e.g. Upstash) is running and reachable via the address in `REDIS_URL` (`redis://127.0.0.1:6379`).
-- You can test your Redis connection in a terminal:
-  ```bash
-  redis-cli ping
-  # Should output: PONG
-  ```
+```
+personal-calorie-tracker/
+├── Backend/
+│   ├── prisma/
+│   │   └── schema.prisma            # Prisma relational models and indexes
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── cloudinary.js        # Multer Cloudinary storage engine
+│   │   │   ├── gemini.js            # Google Gemini AI SDK client
+│   │   │   └── redis.js             # ioredis cache client & BullMQ connection factory
+│   │   ├── controllers/
+│   │   │   ├── aiController.js      # Agentic chat SSE stream & vision job enqueuer
+│   │   │   ├── authController.js    # Registration, login, profile management
+│   │   │   ├── goalController.js    # Target calorie, macro, and weight endpoints
+│   │   │   ├── mealController.js    # Meal logging, chronological filtering, cache hooks
+│   │   │   ├── pdfImportController.js# PDF diary parsing and BullMQ job status
+│   │   │   └── reportController.js  # Aggregated nutrition reports with Redis caching
+│   │   ├── middleware/
+│   │   │   ├── authMiddleware.js    # JWT Bearer token validation and user context injection
+│   │   │   └── validateRequest.js   # Zod schema validation middleware
+│   │   ├── routes/
+│   │   │   ├── aiRoutes.js          # /api/ai/* endpoints
+│   │   │   ├── authRoutes.js        # /api/auth/* endpoints
+│   │   │   ├── goalRoutes.js        # /api/goals/* endpoints
+│   │   │   ├── mealRoutes.js        # /api/meals/* endpoints
+│   │   │   ├── pdfImportRoutes.js   # /api/diary/import-pdf/* endpoints
+│   │   │   └── reportRoutes.js      # /api/reports/* endpoints
+│   │   ├── utils/
+│   │   │   ├── cacheInvalidator.js  # SCAN-based non-blocking Redis cache invalidation
+│   │   │   ├── hash.js              # SHA-256 file fingerprinting
+│   │   │   ├── token.js             # JWT signing and verification helpers
+│   │   │   └── validationSchemas.js # Zod schemas for meals, goals, and auth
+│   │   ├── workers/
+│   │   │   ├── foodAnalysis.worker.js # BullMQ worker for Gemini Vision image inference
+│   │   │   └── pdfImport.worker.js    # BullMQ worker for PDF document extraction
+│   │   └── app.js                   # Express application configuration and middleware
+│   ├── server.js                    # Server entrypoint and worker bootstrapper
+│   ├── package.json                 # Backend dependencies and runner scripts
+│   └── .env.example                 # Template for backend environment variables
+│
+├── Frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ai/
+│   │   │   │   └── ChatBotFAB.jsx   # Floating Action Button, expandable chat, SSE parser
+│   │   │   ├── dashboard/
+│   │   │   │   ├── CalorieRing.jsx  # Circular SVG calorie progress visualization
+│   │   │   │   ├── MacroCard.jsx    # Macronutrient breakdown progress cards
+│   │   │   │   └── MealsList.jsx    # Chronological meal listings
+│   │   │   ├── diary/
+│   │   │   │   ├── MealLoggerModal.jsx # Manual meal creation modal with unit selectors
+│   │   │   │   └── PdfImportModal.jsx  # Asynchronous PDF upload and polling modal
+│   │   │   ├── reports/
+│   │   │   │   ├── DailyNutritionPerformance.jsx
+│   │   │   │   ├── MacroCompositionDonut.jsx # Recharts macronutrient ratio donut
+│   │   │   │   ├── MacroTrendsChart.jsx      # Recharts multi-day macro trend graph
+│   │   │   │   ├── MicronutrientSummary.jsx
+│   │   │   │   ├── NutritionSummaryMetrics.jsx
+│   │   │   │   └── WeeklyCalorieChart.jsx    # Intake vs target bar chart
+│   │   │   └── ui/
+│   │   │       ├── ErrorAlert.jsx   # Contextual alert notifications
+│   │   │       └── ErrorState.jsx   # Full-page fallback error views
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx      # User authentication state provider
+│   │   ├── pages/
+│   │   │   ├── DashboardPage.jsx    # Daily overview and calorie status
+│   │   │   ├── FoodDiaryPage.jsx    # Chronological diary view
+│   │   │   ├── GoalsPage.jsx        # Target calories, macros, and weight progress
+│   │   │   ├── ReportsPage.jsx      # Analytics dashboard and vector PDF exporter
+│   │   │   └── ScannerPage.jsx      # AI Food Vision scanner interface
+│   │   ├── services/
+│   │   │   └── api.js               # Configured Axios instance with auth interceptors
+│   │   ├── App.jsx                  # React Router root and route guards
+│   │   ├── index.css                # Tailwind CSS imports and custom styling
+│   │   └── main.jsx                 # React root DOM mount
+│   ├── index.html                   # HTML5 document template
+│   ├── package.json                 # Frontend dependencies and Vite scripts
+│   ├── tailwind.config.js           # Tailwind design tokens and color theme
+│   ├── vite.config.js               # Vite build configuration and plugins
+│   └── .env.example                 # Template for frontend environment variables
+│
+└── README.md                        # Master project documentation
+```
 
-#### 3. Why does the AI Chatbot return `API key not valid`?
-- Check that you copied the correct Gemini API key from [Google AI Studio](https://aistudio.google.com/) into `Backend/.env` under `GEMINI_API_KEY`.
-- Avoid surrounding quotes or spaces in `.env`.
-- Restart the backend server (`npm run dev`) after modifying `.env`.
+---
 
-#### 4. Why do frontend requests fail with `Network Error`?
-- Verify that the backend server is running on port 5000.
-- Verify that `Frontend/.env` has `VITE_API_URL=http://localhost:5000/api`.
-- Remember that Vite requires a server restart (`npm run dev`) after modifying `.env`.
+## 8. User Guide
 
-#### 5. Why can't I edit a meal from yesterday?
-- CalorieMate enforces a strict **"Today Only" Mutation Rule**. Historical entries are permanently locked to preserve data integrity. Only meals logged for today's date can be edited or deleted.
+Follow this guide to get the most out of CalorieMate:
 
-#### 6. How does file deduplication work?
-- When uploading an image or PDF, the backend computes a cryptographic SHA-256 hash. If that exact file was previously processed for your account, CalorieMate instantly retrieves the existing result from PostgreSQL, avoiding duplicate Gemini API calls and latency.
+### 👤 1. Account Creation & Profile Setup
+1. Open **`http://localhost:5173`** in your browser.
+2. Click **Sign Up** to create an account with your name, email, and password.
+3. Upon registration, you are redirected to the **Dashboard**.
+4. Navigate to **Goals** (`/goals`) to set your daily calorie baseline (e.g. 2,200 kcal), target macros (Protein, Carbs, Fat), and starting body weight.
+
+### 📖 2. Logging Meals in the Food Diary
+1. Navigate to **Food Diary** (`/diary`).
+2. Click **"Log Meal"** to open the meal creator modal.
+3. Select the meal slot (**Breakfast**, **Lunch**, **Snacks**, or **Dinner**).
+4. Enter the food name, portion amount, unit (e.g., grams, slices, bowls), and calories/macros.
+5. Save the entry to immediately see today's calorie budget update.
+
+> [!TIP]
+> **Today-Only Rule**: To maintain truthful dietary records, only meals logged for the current calendar date can be edited or deleted. Past records remain preserved as immutable historical data.
+
+### 💬 3. Interacting with the AI Nutritionist
+1. Click the floating green robot button (**`ChatBotFAB`**) located in the bottom-right corner of any page.
+2. The assistant responds to natural language commands and executes tasks automatically:
+   - *"What did I eat today?"* — summarizes your recorded meals and total consumed calories.
+   - *"Log 2 scrambled eggs and a slice of whole wheat toast for breakfast"* — calculates estimated nutrition and directly records the meal into your database.
+   - *"How much calorie headroom do I have left?"* — inspects your daily target against consumed calories and advises on remaining macros.
+   - *"How was my nutrition this week?"* — summarizes multi-day averages and macro balance.
+3. Watch the Dashboard update automatically in real-time without refreshing the page!
+
+### 📷 4. Scanning Meals with AI Food Vision
+1. Navigate to **Scanner** (`/scanner`).
+2. Upload a photograph of a meal or take a photo using your device camera.
+3. Click **"Analyze Food"**.
+4. The image is uploaded, SHA-256 fingerprinted, and placed into the background queue.
+5. The interface polls the status while Google Gemini estimates portion size, food identity, calories, protein, carbs, and fat.
+6. Once complete, review the extracted values and click **"Save to Diary"**.
+
+### 📄 5. Importing PDF Food Diaries
+1. In the **Food Diary** page, click **"Import PDF"**.
+2. Select a PDF document containing a food log or meal plan.
+3. The BullMQ PDF worker parses the multi-page document, extracts structured meal entries, and populates them into your diary.
+
+### 📈 6. Generating & Exporting PDF Reports
+1. Navigate to **Reports** (`/reports`).
+2. Select your desired timeframe: **Last 7 Days**, **Last 15 Days**, or **Custom Date Range**.
+3. Explore the visual charts:
+   - Daily Calorie Intake vs Target.
+   - Macro distribution over time.
+   - Macronutrient Composition Donut chart.
+4. Click **"Export PDF Report"** in the top-right corner.
+5. CalorieMate's client-side vector engine renders the charts and metrics into a formatted, multi-page A4 PDF file (`CalorieMate_Nutrition_Report.pdf`) that downloads directly to your device.
 
 ---
 
