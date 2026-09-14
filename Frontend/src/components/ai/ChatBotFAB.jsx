@@ -9,11 +9,12 @@ const ChatBotFAB = () => {
   const { user } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
       sender: 'bot',
-      text: "Hi! I'm **CalorieMate AI** 🤖\n\nI can help you:\n- 📝 **Log meals** — just tell me what you ate\n- 🎯 **Check your goals** — ask \"what are my goals?\"\n- 📊 **View today's meals** — ask \"what did I eat today?\"\n- 📅 **Weekly summary** — ask \"how was my week?\"\n- 🥗 **Nutrition questions** — ask anything!\n\nWhat would you like to do?"
+      text: "Hi! I'm **CalorieMate AI**.\n\nI can help you:\n- **Log meals** — just tell me what you ate\n- **Check your goals** — ask \"what are my goals?\"\n- **View today's meals** — ask \"what did I eat today?\"\n- **Weekly summary** — ask \"how was my week?\"\n- **Nutrition questions** — ask anything!\n\nWhat would you like to do?"
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -173,7 +174,7 @@ const ChatBotFAB = () => {
     setMessages([{
       id: 'welcome',
       sender: 'bot',
-      text: "Hi! I'm **CalorieMate AI** 🤖\n\nI can help you:\n- 📝 **Log meals** — just tell me what you ate\n- 🎯 **Check your goals** — ask \"what are my goals?\"\n- 📊 **View today's meals** — ask \"what did I eat today?\"\n- 📅 **Weekly summary** — ask \"how was my week?\"\n- 🥗 **Nutrition questions** — ask anything!\n\nWhat would you like to do?"
+      text: "Hi! I'm **CalorieMate AI**.\n\nI can help you:\n- **Log meals** — just tell me what you ate\n- **Check your goals** — ask \"what are my goals?\"\n- **View today's meals** — ask \"what did I eat today?\"\n- **Weekly summary** — ask \"how was my week?\"\n- **Nutrition questions** — ask anything!\n\nWhat would you like to do?"
     }]);
   };
 
@@ -183,7 +184,11 @@ const ChatBotFAB = () => {
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
       {/* Chat Popover */}
       {isOpen && (
-        <div className="mb-4 bg-surface-container-lowest rounded-2xl w-[calc(100vw-32px)] sm:w-[380px] h-[min(calc(100vh-120px),600px)] sm:h-auto sm:max-h-[600px] shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-outline-variant/50 flex flex-col overflow-hidden"
+        <div className={`bg-surface-container-lowest rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] border border-outline-variant/50 flex flex-col overflow-hidden transition-all ${
+            isFullScreen
+              ? 'fixed inset-2 sm:inset-4 z-[60] mb-0'
+              : 'mb-4 w-[calc(100vw-32px)] sm:w-[380px] h-[min(calc(100vh-120px),600px)] sm:h-auto sm:max-h-[600px]'
+          }`}
           style={{ animation: 'slideUp 0.2s ease-out' }}>
 
           {/* Header */}
@@ -206,6 +211,15 @@ const ChatBotFAB = () => {
             </div>
             <div className="flex items-center gap-1">
               <button
+                onClick={() => setIsFullScreen(!isFullScreen)}
+                title={isFullScreen ? "Minimize" : "Expand"}
+                className="hover:bg-white/20 p-1.5 rounded-full transition-colors"
+              >
+                <span className="material-symbols-outlined text-[18px]">
+                  {isFullScreen ? 'close_fullscreen' : 'open_in_full'}
+                </span>
+              </button>
+              <button
                 onClick={clearChat}
                 title="Clear chat"
                 className="hover:bg-white/20 p-1.5 rounded-full transition-colors"
@@ -224,7 +238,7 @@ const ChatBotFAB = () => {
 
           {/* Messages Area */}
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-surface min-h-0"
-            style={{ maxHeight: '430px' }}>
+            style={{ maxHeight: isFullScreen ? 'none' : '430px' }}>
             {messages.map(msg => (
               <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} items-end gap-2 min-w-0`}>
                 {msg.sender === 'bot' && (

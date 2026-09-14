@@ -1,5 +1,6 @@
 const prisma = require('../config/db');
 const bcrypt = require('bcryptjs');
+const AppError = require('../utils/AppError');
 
 exports.registerUser = async ({ name, email, password }) => {
   const userExists = await prisma.user.findUnique({
@@ -30,13 +31,13 @@ exports.loginUser = async ({ email, password }) => {
   });
 
   if (!user) {
-    throw new Error('Invalid email or password');
+    throw new AppError('User does not exist', 401);
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new Error('Invalid email or password');
+    throw new AppError('Incorrect password', 401);
   }
 
   return user;

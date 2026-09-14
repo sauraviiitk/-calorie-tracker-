@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
+    "dev": "node --watch server.js",
     "worker": "node src/workers/foodAnalysis.worker.js",
     "worker:pdf": "node src/workers/pdfImport.worker.js",
     "test": "echo \"Error: no test specified\" && exit 1"

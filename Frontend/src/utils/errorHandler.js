@@ -57,8 +57,8 @@ export const normalizeApiError = (error) => {
         normalized.retryable = false;
         break;
       case 401:
-        normalized.title = 'Session Expired';
-        normalized.message = 'Please log in again to continue.';
+        normalized.title = 'Authentication Failed';
+        normalized.message = apiMessage || 'Please log in again to continue.';
         normalized.retryable = false;
         break;
       case 403:
