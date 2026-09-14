@@ -63,7 +63,7 @@ Experience CalorieMate in action—from conversational AI meal logging to instan
 
 <div align="center">
 
-[![CalorieMate Video Walkthrough](https://placehold.co/1200x600/222222/FFFFFF/png?text=▶+Click+to+Watch+CalorieMate+Full+Demo)](https://drive.google.com/file/d/1VJ21FlwP-XRjEfy_Whe7630Fx6m_H4mM/view?usp=sharing)
+[![CalorieMate Video Walkthrough](./assets/video_thumbnail.jpg)](https://drive.google.com/file/d/1VJ21FlwP-XRjEfy_Whe7630Fx6m_H4mM/view?usp=sharing)
 
 *Click the banner above to watch the comprehensive walkthrough of CalorieMate.*
 
